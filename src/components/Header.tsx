@@ -49,7 +49,7 @@ const ToggleBtnLabel = styled.label`
     width: 36px;
     height: 16px;
     background-color: transparent;
-    border: 2px solid ${props => props.theme.textColor};
+    border: 2px solid ${props => props.theme.primary};
     border-radius: 14px;
     cursor: pointer;
 `;
@@ -58,7 +58,7 @@ const ToggleBtnSpan = styled.span`
     margin: 3px;
     width: 10px;
     height: 10px;
-    background-color: ${props => props.theme.textColor};
+    background-color: ${props => props.theme.primary};
     border-radius: 50%;
     transition: .2s ease-in-out;
 `;
@@ -72,16 +72,16 @@ const ToggleBtnInput = styled.input`
 
 const BtnBack = styled.button`
     padding: 5px 14px;
-    color: ${props => props.theme.textColor};
+    color: ${props => props.theme.primary};
     font-size: 13px;
     border-radius: 4px;
     background-color: transparent;
-    border: 1px solid ${props => props.theme.textColor};
+    border: 1px solid ${props => props.theme.primary};
     cursor: pointer;
 
     &:hover {
-        color: ${props => props.theme.hover};
-        border-color: ${props => props.theme.hover};
+        color: ${props => props.theme.primaryHover};
+        border-color: ${props => props.theme.primaryHover};
     }
 `;
 

@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
         /* font: inherit; */
         vertical-align: baseline;
         font-family: Montserrat, sans-serif;
-        color: ${props => props.theme.textColor};
+        color: ${props => props.theme.primary};
         background-color: ${props => props.theme.bgColor};
     }
     /* HTML5 display-role reset for older browsers */

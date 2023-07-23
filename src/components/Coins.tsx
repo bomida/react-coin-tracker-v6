@@ -38,14 +38,14 @@ const CoinNameP = styled.p`
     overflow: hidden;
     margin-right: 10px;
     width: 100%;
-    color: ${props => props.theme.textColor};
+    color: ${props => props.theme.primary};
     text-overflow: ellipsis;
     word-break: break-all;
     white-space: nowrap;
 `;
 
 const LinkArrow = styled.span`
-    color: ${props => props.theme.textColor};
+    color: ${props => props.theme.primary};
 `;
 
 const Coin = styled.li`
@@ -57,9 +57,9 @@ const Coin = styled.li`
     cursor: pointer;
 
     &:hover {
-        border-color: ${props => props.theme.hover};
+        border-color: ${props => props.theme.primaryHover};
         a, ${CoinNameP}, ${LinkArrow} {
-            color: ${props => props.theme.hover};
+            color: ${props => props.theme.primaryHover};
         }
     }
 

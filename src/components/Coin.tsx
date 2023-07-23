@@ -60,18 +60,18 @@ const Tabs = styled.ul`
 const Tab = styled.li<{$isActive: boolean}>`
     overflow: hidden;
     width: 100%;
-    color: ${props => props.$isActive ? props.theme.hover : props.theme.textColor};
+    color: ${props => props.$isActive ? props.theme.primaryHover : props.theme.primary};
     font-size: 14px;
     text-align: center;
     border-width: 1px;
     border-style: solid;
-    border-color: ${props => props.$isActive ? props.theme.hover : props.theme.textColor};
+    border-color: ${props => props.$isActive ? props.theme.primaryHover : props.theme.primary};
     border-radius: 10px;
     cursor: pointer;
 
     &:hover {
-        color: ${props => props.theme.hover};
-        border-color: ${props => props.theme.hover};
+        color: ${props => props.theme.primaryHover};
+        border-color: ${props => props.theme.primaryHover};
     }
 
     a {

@@ -39,7 +39,7 @@ const UsdListItem = styled.li`
     margin-top: 10px;
     padding: 15px 20px;
     font-size: 14px;
-    background-color: ${props => props.theme.contentsWapperBg};
+    background-color: ${props => props.theme.contentsBg};
     border-radius: 12px;
 
     b {
