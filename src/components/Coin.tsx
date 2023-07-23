@@ -1,9 +1,11 @@
 import { Link, Outlet, useMatch, useParams } from "react-router-dom";
+import {Helmet} from "react-helmet";
 import { styled } from "styled-components";
 import { useQuery } from "react-query";
 import { fetchCoinData, fetchPriceData } from "../apis";
 
 function Coin() {
+
     const { coinId } = useParams() as unknown as RouteParams;
     const chartMatch = useMatch('/:coinId/chart');
     const priceMatch = useMatch('/:coinId/price');
@@ -13,6 +15,10 @@ function Coin() {
 
     return(
         <>
+            <Helmet>
+                <title>{coinData?.name}</title>
+                <meta name="description" content={coinData?.description} />
+            </Helmet>
             {isLoading ? <Loading>Loading...</Loading> : (
                 <>
                     <QuickInfo>
