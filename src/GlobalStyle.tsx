@@ -8,7 +8,7 @@ const GlobalStyle = createGlobalStyle`
     small, strike, strong, sub, sup, tt, var,
     b, u, i, center,
     dl, dt, dd, ol, ul, li,
-    fieldset, form, label, legend,
+    fieldset, form, label, legend, input, button,
     table, caption, tbody, tfoot, thead, tr, th, td,
     article, aside, canvas, details, embed, 
     figure, figcaption, footer, header, hgroup, 
@@ -17,20 +17,20 @@ const GlobalStyle = createGlobalStyle`
         margin: 0;
         padding: 0;
         border: 0;
+        color: inherit;
         font-size: 100%;
-        /* font: inherit; */
+        line-height: 1;
         vertical-align: baseline;
-        font-family: Montserrat, sans-serif;
-        color: ${props => props.theme.primary};
-        background-color: ${props => props.theme.bgColor};
     }
     /* HTML5 display-role reset for older browsers */
     article, aside, details, figcaption, figure, 
     footer, header, hgroup, menu, nav, section {
         display: block;
     }
-    body {
-        line-height: 1;
+    html {
+        font-size: 0.0528333vw;
+        font-family: Montserrat, sans-serif;
+        background-color: #141518;
     }
     ol, ul {
         list-style: none;
