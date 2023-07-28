@@ -1,11 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from './components/Header';
-
+import Coinboard from "./pages/dashboard/Coinboard";
 
 function router() {
     return(
         <BrowserRouter>
             <Header />
+            <Routes>
+                <Route path="/" element={<Coinboard />} />
+            </Routes>
 
 
 

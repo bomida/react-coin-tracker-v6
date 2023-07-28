@@ -1,14 +1,17 @@
 import { styled } from "styled-components";
 import { ReactComponent as Logo } from '../assets/logo.svg';
+import { useMatch } from "react-router-dom";
 
 function Header() {
+    const dashboardMatch = useMatch('/');
+    const tradingMatch = useMatch('/trading');
     return(
         <Container>
             <Nav>
                 <Logo />
                 <MenuLists>
-                    <MenuItem>Dashboard</MenuItem>
-                    <MenuItem>Trading</MenuItem>
+                    <MenuItem $isActive={dashboardMatch !== null}>Dashboard</MenuItem>
+                    <MenuItem $isActive={tradingMatch !== null}>Trading</MenuItem>
                 </MenuLists>
             </Nav>
         </Container>
@@ -28,18 +31,17 @@ const MenuLists = styled.ul`
     gap: 10rem;
     margin: 0 auto;
 `;
-const MenuItem = styled.li`
+const MenuItem = styled.li<{$isActive: boolean}>`
     padding: 9rem 15rem;
-    color: #ffffff;
+    color: ${props => props.$isActive ? props.theme.colors.primaryTxt : props.theme.colors.white};
     font-size: 13rem;
     font-weight: 500;
+    background-color: ${props => props.$isActive && props.theme.colors.primary};
     border-radius: 20rem;
-    transition: background-color .2s ease-in-out;
     cursor: pointer;
 
     &:hover {
-        color: #141518;
-        background-color: #E2E247;
+        color: ${props => props.$isActive ? props.theme.colors.primaryTxt : props.theme.colors.primary};
     }
 `;
 

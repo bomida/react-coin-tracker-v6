@@ -29,8 +29,8 @@ const GlobalStyle = createGlobalStyle`
     }
     html {
         font-size: 0.0528333vw;
-        font-family: Montserrat, sans-serif;
-        background-color: #141518;
+        font-family: Montserrat, 'Noto Sans', sans-serif;
+        background-color: ${props => props.theme.colors.bg};
     }
     ol, ul {
         list-style: none;
