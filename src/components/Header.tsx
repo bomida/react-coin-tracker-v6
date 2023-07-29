@@ -23,8 +23,8 @@ const Nav = styled.nav`
     display: flex;
     align-items: center;
     margin: 0 auto;
-    padding: 30rem;
-    max-width: 1200rem;
+    height: 90rem;
+    max-width: 1200px;
 `;
 const MenuLists = styled.ul`
     display: flex;
@@ -34,7 +34,7 @@ const MenuLists = styled.ul`
 const MenuItem = styled.li<{$isActive: boolean}>`
     padding: 9rem 15rem;
     color: ${props => props.$isActive ? props.theme.colors.primaryTxt : props.theme.colors.white};
-    font-size: 13rem;
+    font-size: ${props => props.theme.fontSize.rg};
     font-weight: 500;
     background-color: ${props => props.$isActive && props.theme.colors.primary};
     border-radius: 20rem;

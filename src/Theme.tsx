@@ -7,11 +7,11 @@ const colors = {
     red: '#DE6453',
     green: '#4D8863',
     white: '#FFFFFF',
-    TxtBlack: '#222222',
+    txtBlack: '#222222',
     panelBlack: '#222327',
     ddd: '#DDDDDD',
-    999: '#999999',
-    333: '#333333',
+    nine: '#999999',
+    three: '#333333',
     bg: '#141518',
 }
 

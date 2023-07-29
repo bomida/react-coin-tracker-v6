@@ -21,6 +21,7 @@ const GlobalStyle = createGlobalStyle`
         font-size: 100%;
         line-height: 1;
         vertical-align: baseline;
+        box-sizing: border-box;
     }
     /* HTML5 display-role reset for older browsers */
     article, aside, details, figcaption, figure, 
@@ -28,7 +29,8 @@ const GlobalStyle = createGlobalStyle`
         display: block;
     }
     html {
-        font-size: 0.0528333vw;
+        /* font-size: 0.0528333vw; */
+        font-size: 1px;
         font-family: Montserrat, 'Noto Sans', sans-serif;
         background-color: ${props => props.theme.colors.bg};
     }

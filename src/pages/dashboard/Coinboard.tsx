@@ -1,12 +1,12 @@
 import * as boardSt from "./Coninboard.style"
+import Profile from "./Profile";
 import Subscribe from "./Subscribe";
 import Market from "./Market";
-import Overoll from "./Overoll";
 
 function Coinboard() {
     return (
         <boardSt.Wrap>
-            <Overoll />
+            <Profile />
             <Subscribe />
             <Market />
         </boardSt.Wrap>
