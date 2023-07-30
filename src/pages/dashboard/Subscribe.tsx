@@ -3,6 +3,7 @@ import * as boardSt from "./Coninboard.style"
 import { ReactComponent as More } from "../../assets/btn_more.svg";
 
 interface IMyCoins {
+    id: number;
     coinName: string;
     coinNameShort: string;
     coinMount: string;
@@ -12,6 +13,7 @@ interface IMyCoins {
 
 const data: IMyCoins[] = [
     {
+        id: 1,
         coinName: 'Aave',
         coinNameShort: 'AAV',
         coinMount: '1.55',
@@ -19,6 +21,7 @@ const data: IMyCoins[] = [
         profitMount: '7.235',
     },
     {
+        id: 2,
         coinName: 'Eheriuem',
         coinNameShort: 'ETR',
         coinMount: '1.55',
@@ -26,6 +29,7 @@ const data: IMyCoins[] = [
         profitMount: '600000',
     },
     {
+        id: 3,
         coinName: 'WAVES',
         coinNameShort: 'WAVES',
         coinMount: '115.555',
@@ -33,6 +37,7 @@ const data: IMyCoins[] = [
         profitMount: '1360',
     },
     {
+        id: 4,
         coinName: 'VChain',
         coinNameShort: 'VET',
         coinMount: '1.2',
@@ -46,13 +51,13 @@ function Subscribe() {
         <SubscribeContainer>
             <boardSt.PanelHead>Subscribe</boardSt.PanelHead>
             <Lists>
-                {data?.map(WatchCoin => (
-                    <boardSt.Panel as="li">
+                {data?.map(watchCoin => (
+                    <boardSt.Panel key={watchCoin.id} as="li">
                         <WatchTop>
-                            <WatchCoinName>{WatchCoin.coinName}<br/><span>{WatchCoin.coinNameShort}</span></WatchCoinName>
+                            <WatchCoinName>{watchCoin.coinName}<br/><span>{watchCoin.coinNameShort}</span></WatchCoinName>
                             <More />
                         </WatchTop>
-                        <WatchCoinAmount>${Number(WatchCoin.profitMount).toLocaleString()}</WatchCoinAmount>
+                        <WatchCoinAmount>${Number(watchCoin.profitMount).toLocaleString()}</WatchCoinAmount>
                         <WatchBottom>
                             <WatchCoinSymbol></WatchCoinSymbol>
                             <WatchCoinRate>- 2.35%</WatchCoinRate>
@@ -107,7 +112,7 @@ const WatchCoinSymbol = styled.span`
     display: inline-block;
     width: 35rem;
     height: 35rem;
-    background-color: #ffffff09;
+    background-color: #ffffff30;
     border-radius: 10rem;
 `;
 const WatchCoinRate = styled.p`

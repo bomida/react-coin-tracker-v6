@@ -4,7 +4,7 @@ export const Wrap = styled.div`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(6, 1fr);
-    gap: 40rem 20rem;
+    gap: 20rem;
     margin: 0 auto;
     /* height: calc(100vh - 160rem); */
     padding: 20rem 0 50rem;

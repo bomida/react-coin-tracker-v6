@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import * as boardSt from "./Coninboard.style"
 
 interface IMyCoins {
+    id: number;
     coinName: string;
     coinNameShort: string;
     coinAmount: string;
@@ -10,21 +11,24 @@ interface IMyCoins {
 }
 
 const data: IMyCoins[] = [
-    {
+    {   
+        id: 1,
         coinName: 'Eheriuem',
         coinNameShort: 'ETR',
         coinAmount: '1.55',
         profitRate: '- 21.3',
         profitAmount: '600000',
     },
-    {
+    {   
+        id: 2,
         coinName: 'WAVES',
         coinNameShort: 'WAVES',
         coinAmount: '115.555',
         profitRate: '+ 10.25',
         profitAmount: '1360',
     },
-    {
+    {   
+        id: 3,
         coinName: 'VChain',
         coinNameShort: 'VET',
         coinAmount: '1.2',
@@ -41,7 +45,7 @@ function Profile() {
                 <boardSt.sectionTitle>My Assets</boardSt.sectionTitle>
                 <AssetsLists>
                     {data?.map(myCoin => (
-                            <AssetsItem>
+                            <AssetsItem key={myCoin.id}>
                                 <InfoWrapper>
                                     <MyCoinName>{myCoin.coinName}<span>{myCoin.coinNameShort}</span></MyCoinName>
                                     <MyCoinAmount>{myCoin.coinAmount}<span>{myCoin.coinNameShort}</span></MyCoinAmount>
