@@ -2,14 +2,16 @@ import { styled } from "styled-components";
 
 export const Wrap = styled.div`
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-columns: 1fr 2fr;
     gap: 20rem;
     margin: 0 auto;
-    /* height: calc(100vh - 160rem); */
-    padding: 20rem 0 50rem;
     max-width: 1200px;
     color: #FFFFFF;
+`;
+export const RightWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 40rem;
 `;
 
 export const Container = styled.div``;

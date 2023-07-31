@@ -7,8 +7,10 @@ function Coinboard() {
     return (
         <boardSt.Wrap>
             <Profile />
-            <Subscribe />
-            <Market />
+            <boardSt.RightWrapper>
+                <Subscribe />
+                <Market />
+            </boardSt.RightWrapper>
         </boardSt.Wrap>
     );
 }

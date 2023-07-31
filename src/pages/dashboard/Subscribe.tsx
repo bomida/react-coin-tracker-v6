@@ -71,7 +71,6 @@ function Subscribe() {
 
 const SubscribeContainer = styled(boardSt.Container)`
     grid-column: 2 / 4;
-    grid-row: 1 / 3;
 `;
 
 const WatchTop = styled.div`

@@ -41,7 +41,7 @@ function Profile() {
     return (
         <ProfileContainer>
             <boardSt.PanelHead>Profile</boardSt.PanelHead>
-            <boardSt.Panel>
+            <ProfilePanel>
                 <boardSt.sectionTitle>My Assets</boardSt.sectionTitle>
                 <AssetsLists>
                     {data?.map(myCoin => (
@@ -63,14 +63,16 @@ function Profile() {
                     <span>Profit</span>
                     <p>$234,734</p>
                 </DonutChart>
-            </boardSt.Panel>
+            </ProfilePanel>
         </ProfileContainer>
     );
 }
 
 const ProfileContainer = styled(boardSt.Container)`
     grid-column: 1 / 2;
-    grid-row: 1 / 7;
+`;
+const ProfilePanel = styled(boardSt.Panel)`
+    height: calc()(100% - 45rem);
 `;
 
 const AssetsLists = styled.ul`
