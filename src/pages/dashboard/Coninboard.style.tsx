@@ -11,7 +11,7 @@ export const Wrap = styled.div`
 export const RightWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 40rem;
+    gap: 20rem;
 `;
 
 export const Container = styled.div``;
@@ -28,7 +28,13 @@ export const Panel = styled.section`
     padding: 30rem 20rem;
     background-color: ${props => props.theme.colors.panelBlack};
     border-radius: 15rem;
-    `;
+`;
+export const LoadingMsg = styled.p`
+    color: ${props => props.theme.colors.ddd};
+    font-size: ${props => props.theme.fontSize.sm};
+    font-weight: 500;
+    text-align: center;
+`;
 
 export const sectionTitle = styled.h3`
     padding-bottom: 10rem;
