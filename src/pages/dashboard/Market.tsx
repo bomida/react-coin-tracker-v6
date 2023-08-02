@@ -7,16 +7,19 @@ import { styled } from 'styled-components';
 
 
 export const Market = () => {
-    const { isLoading, data: coins, error } = useQuery<ICoins[]>('coins', fetchCoins);
+    const { isLoading, data: coins, error } = useQuery<ICoins[]>('coins', fetchCoins, {
+        staleTime: 1000 * 60 * 5, // api block을 막기위해 캐시 만료 기간을 5분으로 설정
+    });
 
-    const selectedCoinIds = coins?.slice(0, 4).map((coin) => coin.id) || [];
-    const { data: priceDataArray } = useQuery<PriceInfo[]>(['priceData'],
-        async () => {
-            return Promise.all(selectedCoinIds.map((coinId) => fetchPriceData(coinId)));
-        }, {
-            enabled: !!selectedCoinIds.length,
-        }
-    );
+    // const selectedCoinIds = coins?.slice(0, 8).map((coin) => coin.id) || [];
+    // const { data: priceDataArray } = useQuery<PriceInfo[]>(['priceData'],
+    //     async () => {
+    //         return Promise.all(selectedCoinIds.map((coinId) => fetchPriceData(coinId)));
+    //     }, {
+    //         enabled: !!selectedCoinIds.length,
+    //         staleTime: 1000 * 60 * 5, // api block을 막기위해 캐시 만료 기간을 5분으로 설정
+    //     }
+    // );
 
     let message = '';
     if (isLoading) message = 'LOADING...';
@@ -25,15 +28,20 @@ export const Market = () => {
     return (
         <MarketContainer>
             <boardSt.PanelHead>Market</boardSt.PanelHead>
-            <boardSt.Panel>
-                {isLoading || error ? (<boardSt.LoadingMsg>{message}</boardSt.LoadingMsg>) : (
-                    <CoinPriceData data={priceDataArray} />
+            <MarketPanel>
+                {isLoading || error ? (<boardSt.LoadingMsg><p>{message}</p></boardSt.LoadingMsg>) : (
+                    // <CoinPriceData data={priceDataArray} />
+                    <CoinPriceData data={coins} />
                 )}
-            </boardSt.Panel>
+            </MarketPanel>
         </MarketContainer>
     );
 };
 
 const MarketContainer = styled(boardSt.Container)`
-    grid-column: 2 / 4;
+    height: 100%;
+`;
+const MarketPanel = styled(boardSt.Panel)`
+    
+    height: calc(100% - 40rem);
 `;

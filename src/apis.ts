@@ -1,9 +1,11 @@
-let BASE_URL = 'v1'
-// let BASE_URL = 'https://api.coinpaprika.com/v1'
+import coinsBackupData from "./assets/data/data_coins.json";
+
+let BASE_URL = 'https://api.coinpaprika.com/v1'
 export let IMG_URL = 'https://cryptocurrencyliveprices.com/img/';
 
 export function fetchCoins() {
-    return fetch(`${BASE_URL}/coins`).then((response) => response.json());
+    // return fetch(`${BASE_URL}/coins`).then((response) => response.json());
+    return coinsBackupData;
 }
 export interface ICoins {
     "id": string;

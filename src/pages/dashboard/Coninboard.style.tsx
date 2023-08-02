@@ -4,14 +4,18 @@ export const Wrap = styled.div`
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 20rem;
+    overflow: hidden;
     margin: 0 auto;
+    height: calc(100vh - 90rem);
     max-width: 1200px;
+    min-height: 668px;
     color: #FFFFFF;
 `;
 export const RightWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20rem;
+    height: calc(100% - 40rem);
 `;
 
 export const Container = styled.div``;
@@ -29,11 +33,17 @@ export const Panel = styled.section`
     background-color: ${props => props.theme.colors.panelBlack};
     border-radius: 15rem;
 `;
-export const LoadingMsg = styled.p`
-    color: ${props => props.theme.colors.ddd};
-    font-size: ${props => props.theme.fontSize.sm};
-    font-weight: 500;
-    text-align: center;
+export const LoadingMsg = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    p {
+        color: ${props => props.theme.colors.ddd};
+        font-size: ${props => props.theme.fontSize.sm};
+        font-weight: 500;
+    }
 `;
 
 export const sectionTitle = styled.h3`

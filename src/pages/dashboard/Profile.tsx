@@ -59,10 +59,12 @@ function Profile() {
                 </AssetsLists>
 
                 <boardSt.sectionTitle>Balance</boardSt.sectionTitle>
-                <DonutChart>
-                    <span>Profit</span>
-                    <p>$234,734</p>
-                </DonutChart>
+                <ChartWrapper>
+                    <DonutChart>
+                        <span>Profit</span>
+                        <p>$234,734</p>
+                    </DonutChart>
+                </ChartWrapper>
             </ProfilePanel>
         </ProfileContainer>
     );
@@ -72,7 +74,7 @@ const ProfileContainer = styled(boardSt.Container)`
     grid-column: 1 / 2;
 `;
 const ProfilePanel = styled(boardSt.Panel)`
-    height: calc()(100% - 45rem);
+    height: calc(100% - 80rem);
 `;
 
 const AssetsLists = styled.ul`
@@ -120,6 +122,11 @@ const ProfitAmount = styled.p`
     font-weight: 400;
 `;
 
+const ChartWrapper = styled(boardSt.Container)`
+    display: flex;
+    align-items: center;
+    height: calc(100% - 300rem);
+`;
 const DonutChart = styled.div`
     display: flex;
     flex-direction: column;
