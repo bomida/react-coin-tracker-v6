@@ -1,6 +1,9 @@
 import { atom } from "recoil";
 
-
+export const isSubscribeAtom = atom<string[]>({
+    key: 'isSubscribe',
+    default: [],
+});
 
 
 

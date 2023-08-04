@@ -3,8 +3,18 @@ import { ReactComponent as IconDecrease } from "../../assets/icon_decrease.svg";
 import { ReactComponent as FullWatch } from "../../assets/icon_watch_full.svg";
 import { styled } from "styled-components";
 import { useTable } from "react-table";
-import React, { useMemo } from "react";
-import { ICoins, IMG_URL, PriceInfo } from "../../apis";
+import React, { useContext, useMemo } from "react";
+import { IMG_URL, PriceInfo } from "../../apis";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isSubscribeAtom } from "../../atoms";
+
+interface MarketProps {
+    data: PriceInfo[] | undefined;
+}
+interface CheckSubscribeProps {
+    id: string,
+    name: string
+}
 
 // name 칼럼
 const nameContainer = (id: string, name: string, shortName: string)=> {
@@ -34,17 +44,21 @@ const iconDecrease = (value: number) => {
         </CellSideFlex>
     );
 };
-const checkSubscribe = (name: string) => {
+// watch 칼럼
+const CheckHandlerContext = React.createContext<Function | null>(null);
+const CheckSubscribe: React.FC<CheckSubscribeProps> = ({id, name}) => {
+    const checkHandler = useContext(CheckHandlerContext);
+    if (!checkHandler) return null;
+
     return (
-        <CellSideFlex>
-            <input type="checkbox" id={name}/>
+        <CellSideFlex key={id}>
+            <input type="checkbox" id={name} onClick={() => checkHandler(id, name)}/>
             <label htmlFor={name}>
                 <FullWatch /> 
             </label>
         </CellSideFlex>
     );
 }
-
 // COLUMNS
 const COLUMNS: any = [
     {
@@ -69,22 +83,33 @@ const COLUMNS: any = [
     },
     {
         Header: 'Watch',
-        accessor : 'name',
-        Cell: ({ value }: { value: string }) => checkSubscribe(value),
+        accessor: (row: PriceInfo) => {
+            return { id: row.id, name: row.name };
+        },
+        Cell: ({ value }: { value: PriceInfo }) => <CheckSubscribe id={value.id} name={value.name} />,
     }
 ];
-
-interface MarketProps {
-    // data: PriceInfo[] | undefined;
-
-    /* will delete */
-    data: ICoins[] | undefined;
-}
 
 const CoinPriceData: React.FC<MarketProps> = ({data: priceDataArray}) => {
     const columns = useMemo(() => COLUMNS, []);
     const data = useMemo(() => priceDataArray || [], [priceDataArray]);
-    console.log(data.slice(0, 5).map(coin => console.log(coin.name)));
+    const setIsSubscribe = useSetRecoilState(isSubscribeAtom);
+    const isSubscribe = useRecoilValue(isSubscribeAtom);
+
+    const checkHandler = (id: string, name: string) => {
+        setIsSubscribe((prev: any) => {
+            const checkboxEle = document.querySelector(`#${name}`);
+            const checkboxId = checkboxEle as HTMLInputElement;
+            if (checkboxId && checkboxId.checked) {
+                // 중복 없이 id를 추가하는 부분
+                return [id, ...prev]
+            } else {
+                // 체크를 해제했을 때 배열에서 해당 id를 제거하는 부분
+                return prev.filter((item: string) => item !== id);
+            }
+        });
+    }
+    
     const { 
         getTableProps, 
         getTableBodyProps, 
@@ -96,61 +121,46 @@ const CoinPriceData: React.FC<MarketProps> = ({data: priceDataArray}) => {
     return (
         <>
             {priceDataArray && (
-                // <TableWrapper>
-                //     <MarketTable {...getTableProps()}>
-                //         <colgroup>
-                //             <col width='35%' />
-                //             <col width='15%' />
-                //             <col width='20%' />
-                //             <col width='20%' />
-                //             <col width='10%' />
-                //         </colgroup>
-                //         <thead>
-                //             {headerGroups.map(headerGroup => (
-                //                 <tr {...headerGroup.getHeaderGroupProps()}>
-                //                 {headerGroup.headers.map((column) => (
-                //                     <th {...column.getHeaderProps()}>
-                //                         {column.render('Header')}
-                //                     </th>
-                //                 ))}
-                //             </tr>
-                //             ))}
-                //         </thead>
-                //         <tbody {...getTableBodyProps()}>
-                //             {rows.map((row) => {
-                //                 prepareRow(row);
-                //                 return (
-                //                     <tr {...row.getRowProps()}>
-                //                     {row.cells.map((cell) => (
-                //                         <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                //                     ))}
-                //                     </tr>
-                //                 );
-                //             })}
-                //         </tbody>
-                //     </MarketTable>
-                // </TableWrapper>
-
-
-                /* will delete */
-                data.slice(0, 5).map(coin => (
-                    <CellSideFlex key={coin.id}>
-                        <input type="checkbox" id={coin.name} onClick={() => handleClick(coin.id)}/>
-                        <label htmlFor={coin.name}>
-                            <MarketName>{coin.name}</MarketName>
-                            <FullWatch /> 
-                        </label>
-                    </CellSideFlex>
-                ))
+                <CheckHandlerContext.Provider value={checkHandler}>
+                    <TableWrapper>
+                        <MarketTable {...getTableProps()}>
+                            <colgroup>
+                                <col width='35%' />
+                                <col width='15%' />
+                                <col width='20%' />
+                                <col width='20%' />
+                                <col width='10%' />
+                            </colgroup>
+                            <thead>
+                                {headerGroups.map(headerGroup => (
+                                    <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map((column) => (
+                                        <th {...column.getHeaderProps()}>
+                                            {column.render('Header')}
+                                        </th>
+                                    ))}
+                                </tr>
+                                ))}
+                            </thead>
+                            <tbody {...getTableBodyProps()}>
+                                {rows.map((row) => {
+                                    prepareRow(row);
+                                    return (
+                                        <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell) => (
+                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                        ))}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </MarketTable>
+                    </TableWrapper>
+                </CheckHandlerContext.Provider>
             )}
         </>
     );
 }
-
-const handleClick = (id: string) => {
-    console.log(id)
-}
-
 
 const TableWrapper = styled.div`
     overflow-y: scroll;
@@ -186,30 +196,6 @@ const CellSideFlex = styled.div`
 
     svg {
         margin-right: 7rem;
-    }
-
-    
-    /* will delete */
-    label {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15rem;
-        cursor: pointer;
-    }
-    input {
-        display: none;
-    }
-    svg {
-        margin-left: 10rem;
-        width: 15rem;
-        height: auto;
-        fill: transparent;
-        stroke: ${props => props.theme.colors.ddd};
-        transition: .1s ease-in-out;
-    }
-    input:checked + label svg {
-        fill: ${props => props.theme.colors.primary};
-        stroke: ${props => props.theme.colors.primary};
     }
 `;
 const MarketTable = styled.table`
