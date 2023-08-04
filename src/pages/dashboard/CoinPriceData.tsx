@@ -164,7 +164,7 @@ const CoinPriceData: React.FC<MarketProps> = ({data: priceDataArray}) => {
 
 const TableWrapper = styled.div`
     overflow-y: scroll;
-    max-height: 452rem;
+    max-height: 370rem;
 `;
 const SymbolWrapper = styled.div`
     display: inline-flex;

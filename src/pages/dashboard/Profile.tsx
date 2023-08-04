@@ -74,7 +74,7 @@ const ProfileContainer = styled(boardSt.Container)`
     grid-column: 1 / 2;
 `;
 const ProfilePanel = styled(boardSt.Panel)`
-    height: calc(100% - 80rem);
+    height: calc(100% - 40rem);
 `;
 
 const AssetsLists = styled.ul`

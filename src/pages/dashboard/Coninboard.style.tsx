@@ -4,9 +4,8 @@ export const Wrap = styled.div`
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 20rem;
-    overflow: hidden;
-    margin: 0 auto;
-    height: calc(100vh - 90rem);
+    margin: 0 auto 40rem;
+    height: calc(100vh - 130rem);
     max-width: 1200px;
     min-height: 668px;
     color: #FFFFFF;
@@ -14,7 +13,7 @@ export const Wrap = styled.div`
 export const RightWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 20rem;
+    gap: 30rem;
     height: calc(100% - 40rem);
 `;
 

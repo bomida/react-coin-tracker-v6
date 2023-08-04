@@ -41,6 +41,5 @@ const MarketContainer = styled(boardSt.Container)`
     height: 100%;
 `;
 const MarketPanel = styled(boardSt.Panel)`
-    
     height: calc(100% - 40rem);
 `;

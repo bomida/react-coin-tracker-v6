@@ -30,7 +30,8 @@ const GlobalStyle = createGlobalStyle`
     }
     html {
         /* font-size: 0.0528333vw; */
-        font-size: 1px;
+        /* font-size: 1px; */
+        font-size: 0.069vw;
         font-family: Montserrat, 'Noto Sans', sans-serif;
         background-color: ${props => props.theme.colors.bg};
     }
