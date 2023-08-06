@@ -4,7 +4,7 @@ import { Link, useMatch } from "react-router-dom";
 
 function Header() {
     const dashboardMatch = useMatch('/');
-    const tradingMatch = useMatch('/trading');
+    const tradingMatch = useMatch('/trading/:coinId');
     return(
         <Container>
             <Nav>
@@ -14,7 +14,7 @@ function Header() {
                         <Link to="/">Dashboard</Link>
                     </MenuItem>
                     <MenuItem $isActive={tradingMatch !== null}>
-                        <Link to="/trading">Trading</Link>
+                        <Link to="/trading/:coinId">Trading</Link>
                     </MenuItem>
                 </MenuLists>
             </Nav>
