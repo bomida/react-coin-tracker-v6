@@ -11,9 +11,9 @@ function router() {
             <Header />
             <Routes>
                 <Route path="/" element={<Coinboard />} />
-                <Route path="/trading" element={<TradingBoard />}>
-                    <Route path="coins" element={<RightPanelCoins />} />
-                    <Route path="coins" element={<RightPanelTrading />} />
+                <Route path="/trading/:coinId" element={<TradingBoard />}>
+                    {/* <Route path="coins" element={<RightPanelCoins />} />
+                    <Route path="detail" element={<RightPanelTrading />} /> */}
                 </Route>
             </Routes>
 
