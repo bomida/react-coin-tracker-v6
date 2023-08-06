@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { ReactComponent as Logo } from '../assets/logo.svg';
-import { useMatch } from "react-router-dom";
+import { Link, useMatch } from "react-router-dom";
 
 function Header() {
     const dashboardMatch = useMatch('/');
@@ -10,8 +10,12 @@ function Header() {
             <Nav>
                 <Logo />
                 <MenuLists>
-                    <MenuItem $isActive={dashboardMatch !== null}>Dashboard</MenuItem>
-                    <MenuItem $isActive={tradingMatch !== null}>Trading</MenuItem>
+                    <MenuItem $isActive={dashboardMatch !== null}>
+                        <Link to="/">Dashboard</Link>
+                    </MenuItem>
+                    <MenuItem $isActive={tradingMatch !== null}>
+                        <Link to="/trading">Trading</Link>
+                    </MenuItem>
                 </MenuLists>
             </Nav>
         </Container>
