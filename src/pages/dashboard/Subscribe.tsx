@@ -1,69 +1,59 @@
 import { styled } from "styled-components";
 import * as boardSt from "./Coninboard.style"
 import { ReactComponent as More } from "../../assets/btn_more.svg";
+import { useRecoilValue } from "recoil";
+import { isSubscribeAtom } from "../../atoms";
+import { useQuery } from "react-query";
+import { IMG_URL, PriceInfo, fetchPriceData } from "../../apis";
+import { useEffect, useState } from "react";
 
-interface IMyCoins {
-    id: number;
-    coinName: string;
-    coinNameShort: string;
-    coinMount: string;
-    profitRate: string;
-    profitMount: string;
-}
-
-const data: IMyCoins[] = [
-    {
-        id: 1,
-        coinName: 'Aave',
-        coinNameShort: 'AAV',
-        coinMount: '1.55',
-        profitRate: '+ 1.3',
-        profitMount: '7.235',
-    },
-    {
-        id: 2,
-        coinName: 'Eheriuem',
-        coinNameShort: 'ETR',
-        coinMount: '1.55',
-        profitRate: '- 21.3',
-        profitMount: '600000',
-    },
-    {
-        id: 3,
-        coinName: 'WAVES',
-        coinNameShort: 'WAVES',
-        coinMount: '115.555',
-        profitRate: '+ 10.25',
-        profitMount: '1360',
-    },
-    {
-        id: 4,
-        coinName: 'VChain',
-        coinNameShort: 'VET',
-        coinMount: '1.2',
-        profitRate: '- 4.853',
-        profitMount: '24000',
-    }
-];
 
 function Subscribe() {
+    const isSubscribe = useRecoilValue(isSubscribeAtom);
+    const [subscribedIds, setSubscribedIds] = useState<string[]>([]);
+
+    useEffect(() => {
+        setSubscribedIds(isSubscribe.slice(0, 4).map((coin) => coin));
+    }, [isSubscribe]);
+
+    const { isLoading, data: subscribeData, error } = useQuery<PriceInfo[]>(['subscribeData', subscribedIds],
+        async () => {
+            return Promise.all(subscribedIds.map((coinId) => fetchPriceData(coinId)));
+        }, {
+            enabled: !!subscribedIds.length,
+            staleTime: 1000 * 60 * 10, // api block을 막기위해 캐시 만료 기간을 10분으로 설정 
+        }
+    );
+
+    let message = '';
+    if (isLoading) message = 'LOADING...';
+    if (error) message = 'SOMETHING HAS BEEN WRONG :(';
+    if (!isSubscribe.length || !subscribedIds.length) message = 'NO SUBSCIBE COINS :('
+
     return (
         <SubscribeContainer>
             <boardSt.PanelHead>Subscribe</boardSt.PanelHead>
             <Lists>
-                {data?.map(watchCoin => (
-                    <boardSt.Panel key={watchCoin.id} as="li">
-                        <WatchTop>
-                            <WatchCoinName>{watchCoin.coinName}<br/><span>{watchCoin.coinNameShort}</span></WatchCoinName>
-                            <More />
-                        </WatchTop>
-                        <WatchCoinAmount>${Number(watchCoin.profitMount).toLocaleString()}</WatchCoinAmount>
-                        <WatchBottom>
-                            <WatchCoinSymbol></WatchCoinSymbol>
-                            <WatchCoinRate>- 2.35%</WatchCoinRate>
-                        </WatchBottom>
-                    </boardSt.Panel>
-                ))}
+                {(isLoading || !isSubscribe.length)
+                    ? <SubscribeLoading><p>{message}</p></SubscribeLoading>
+                    : subscribeData?.slice(0, 4).map(watchCoin => (
+                        <boardSt.Panel key={watchCoin.id} as="li">
+                            <WatchTop>
+                                <WatchCoinName>{watchCoin.name}<br/><span>{watchCoin.symbol}</span></WatchCoinName>
+                                <More />
+                            </WatchTop>
+                            <WatchCoinAmount>${Number(watchCoin.quotes.USD.price).toLocaleString()}</WatchCoinAmount>
+                            <WatchBottom>
+                                <WatchCoinSymbol>
+                                    <img src={`${IMG_URL}${watchCoin.id || 'X'}.png`} alt={`symbol_${watchCoin.name || 'X'}`} />
+                                </WatchCoinSymbol>
+                                <WatchCoinRate $isFontColor={watchCoin.quotes.USD.percent_change_24h >= 0 ? true : false}>
+                                    {watchCoin.quotes.USD.percent_change_24h >= 0 ? `+${watchCoin.quotes.USD.percent_change_24h}` : `${watchCoin.quotes.USD.percent_change_24h}`}%
+                                </WatchCoinRate>
+                            </WatchBottom>
+                        </boardSt.Panel>
+                    ))
+                }
             </Lists>
         </SubscribeContainer>
     );
@@ -71,6 +61,13 @@ function Subscribe() {
 
 const SubscribeContainer = styled(boardSt.Container)`
     grid-column: 2 / 4;
+`;
+const SubscribeLoading = styled(boardSt.LoadingMsg)`
+    padding: 30rem;
+    width: 100%;
+    height: 223rem;
+    background-color: ${props => props.theme.colors.panelBlack};
+    border-radius: 15rem;
 `;
 
 const WatchTop = styled.div`
@@ -109,21 +106,27 @@ const WatchCoinAmount = styled.p`
 `;
 const WatchCoinSymbol = styled.span`
     display: inline-block;
+    padding: 7rem;
     width: 35rem;
     height: 35rem;
     background-color: #ffffff30;
     border-radius: 10rem;
+
+    img {
+        width: 100%;
+    }
 `;
-const WatchCoinRate = styled.p`
+const WatchCoinRate = styled.p<{$isFontColor: boolean}>`
     margin-left: auto;
-    color: ${props => props.theme.colors.green};
+    color: ${props => props.$isFontColor ? props.theme.colors.green : props.theme.colors.red};
     font-size: ${props => props.theme.fontSize.md};
     font-weight: 500;
 `;
 
 const Lists = styled.ul`
-    display: grid;
-    grid-template-columns:  repeat(4, minmax(140rem, 183rem));
+    /* display: grid;
+    grid-template-columns:  repeat(4, minmax(140rem, 183rem)); */
+    display: flex;
     gap: 20rem;
 
     li {

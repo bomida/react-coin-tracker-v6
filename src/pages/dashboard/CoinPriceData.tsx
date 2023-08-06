@@ -13,7 +13,7 @@ interface MarketProps {
 }
 interface CheckSubscribeProps {
     id: string,
-    name: string
+    symbol: string
 }
 
 // name 칼럼
@@ -46,14 +46,14 @@ const iconDecrease = (value: number) => {
 };
 // watch 칼럼
 const CheckHandlerContext = React.createContext<Function | null>(null);
-const CheckSubscribe: React.FC<CheckSubscribeProps> = ({id, name}) => {
+const CheckSubscribe: React.FC<CheckSubscribeProps> = ({id, symbol}) => {
     const checkHandler = useContext(CheckHandlerContext);
     if (!checkHandler) return null;
 
     return (
         <CellSideFlex key={id}>
-            <input type="checkbox" id={name} onClick={() => checkHandler(id, name)}/>
-            <label htmlFor={name}>
+            <input type="checkbox" id={symbol} onClick={() => checkHandler(id, symbol)}/>
+            <label htmlFor={symbol}>
                 <FullWatch /> 
             </label>
         </CellSideFlex>
@@ -84,9 +84,9 @@ const COLUMNS: any = [
     {
         Header: 'Watch',
         accessor: (row: PriceInfo) => {
-            return { id: row.id, name: row.name };
+            return { id: row.id, symbol: row.symbol };
         },
-        Cell: ({ value }: { value: PriceInfo }) => <CheckSubscribe id={value.id} name={value.name} />,
+        Cell: ({ value }: { value: PriceInfo }) => <CheckSubscribe id={value.id} symbol={value.symbol} />,
     }
 ];
 
@@ -94,15 +94,13 @@ const CoinPriceData: React.FC<MarketProps> = ({data: priceDataArray}) => {
     const columns = useMemo(() => COLUMNS, []);
     const data = useMemo(() => priceDataArray || [], [priceDataArray]);
     const setIsSubscribe = useSetRecoilState(isSubscribeAtom);
-    const isSubscribe = useRecoilValue(isSubscribeAtom);
 
-    const checkHandler = (id: string, name: string) => {
+    const checkHandler = (id: string, symbol: string) => {
         setIsSubscribe((prev: any) => {
-            const checkboxEle = document.querySelector(`#${name}`);
-            const checkboxId = checkboxEle as HTMLInputElement;
-            if (checkboxId && checkboxId.checked) {
+            const checkboxEle = document.querySelector<HTMLInputElement>(`#${symbol}`);
+            if (checkboxEle && checkboxEle.checked) {
                 // 중복 없이 id를 추가하는 부분
-                return [id, ...prev]
+                return [...prev, id]
             } else {
                 // 체크를 해제했을 때 배열에서 해당 id를 제거하는 부분
                 return prev.filter((item: string) => item !== id);
@@ -164,7 +162,7 @@ const CoinPriceData: React.FC<MarketProps> = ({data: priceDataArray}) => {
 
 const TableWrapper = styled.div`
     overflow-y: scroll;
-    max-height: 370rem;
+    max-height: 377rem;
 `;
 const SymbolWrapper = styled.div`
     display: inline-flex;
@@ -214,13 +212,13 @@ const MarketTable = styled.table`
     }
     
     tbody td {
-        padding: 5rem 0;
+        padding: 8rem 0;
         color: ${props => props.theme.colors.ddd};
         font-size: ${props => props.theme.fontSize.md};
         vertical-align: middle;
     }
     tbody tr:first-child td {
-        padding-top: 10rem;
+        padding-top: 16rem;
     }
     tbody td:last-child input {
         display: none;

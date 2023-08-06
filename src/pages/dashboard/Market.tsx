@@ -8,7 +8,7 @@ import { styled } from 'styled-components';
 
 export const Market = () => {
     const { isLoading, data: coins, error } = useQuery<ICoins[]>('coins', fetchCoins, {
-        staleTime: 1000 * 60 * 10, // api block을 막기위해 캐시 만료 기간을 5분으로 설정
+        staleTime: 1000 * 60 * 10, // api block을 막기위해 캐시 만료 기간을 10분으로 설정
     });
 
     const selectedCoinIds = coins?.slice(0, 8).map((coin) => coin.id) || [];
@@ -17,7 +17,7 @@ export const Market = () => {
             return Promise.all(selectedCoinIds.map((coinId) => fetchPriceData(coinId)));
         }, {
             enabled: !!selectedCoinIds.length,
-            staleTime: 1000 * 60 * 5, // api block을 막기위해 캐시 만료 기간을 5분으로 설정
+            staleTime: 1000 * 60 * 10, // api block을 막기위해 캐시 만료 기간을 10분으로 설정
         }
     );
 
@@ -41,5 +41,6 @@ const MarketContainer = styled(boardSt.Container)`
     height: 100%;
 `;
 const MarketPanel = styled(boardSt.Panel)`
+    padding-bottom: 22rem;
     height: calc(100% - 40rem);
 `;
