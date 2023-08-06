@@ -1,6 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from './components/Header';
 import Coinboard from "./pages/dashboard/Coinboard";
+import TradingBoard from "./pages/trading/TradingBoard";
+import RightPanelCoins from "./pages/trading/RightPanel_Coins";
+import RightPanelTrading from "./pages/trading/RightPanel_Trading";
 
 function router() {
     return(
@@ -8,6 +11,10 @@ function router() {
             <Header />
             <Routes>
                 <Route path="/" element={<Coinboard />} />
+                <Route path="/trading" element={<TradingBoard />}>
+                    <Route path="coins" element={<RightPanelCoins />} />
+                    <Route path="coins" element={<RightPanelTrading />} />
+                </Route>
             </Routes>
 
 
