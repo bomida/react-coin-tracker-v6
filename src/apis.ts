@@ -61,3 +61,13 @@ export interface PriceInfo {
 export function fetchoOhlcvData(coinId: string) {
     return fetch(`https://ohlcv-api.nomadcoders.workers.dev/?coinId=${coinId}`).then((response) => response.json());
 }
+export interface IOhlcv {
+    time_open: number;
+    time_close: number;
+    open: string;
+    high: string;
+    low: string;
+    close: string;
+    volume: string;
+    market_cap: string;
+}
