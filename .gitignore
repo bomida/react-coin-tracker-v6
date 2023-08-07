@@ -6,7 +6,7 @@
 .pnp.js
 
 # testing
-/coverage
+data/data_coins.json
 
 # production
 /build
