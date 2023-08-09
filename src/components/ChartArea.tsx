@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import ApexCharts from "react-apexcharts";
 
 import { IOhlcv, PriceInfo, fetchoOhlcvData } from "../apis";
+import { any } from 'prop-types';
 
 interface CoinIdProp {
     id: string | undefined;
@@ -11,38 +12,83 @@ interface CoinIdProp {
 
 const ChartArea:React.FC<CoinIdProp> = ({id: coinId}) => {
     let valCoinId = Object.values({coinId})[0];
-    const {isLoading, data: chartData, error} = useQuery<IOhlcv[]>(['chartData', valCoinId], () => fetchoOhlcvData(valCoinId!));
+    const {isLoading, data, error} = useQuery<IOhlcv[]>(['chartData', valCoinId], () => fetchoOhlcvData(valCoinId!));
 
     let message = '';
     if (isLoading) message = 'LOADING...';
     if (error) message = 'SOMTHING HAS BEEN WRONG ;(';
 
+    const convertData = (ohlc: IOhlcv) => {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const month = months[new Date(ohlc.time_open * 1000).getMonth() - 1];
+        const date = new Date(ohlc.time_open * 1000).getDate();
+        
+        return {
+            x: `${month}.${date}`,
+            y: [ohlc.open.toLocaleString(), ohlc.high.toLocaleString(), ohlc.low.toLocaleString(), ohlc.close.toLocaleString()],
+        }
+    }
+
+    let chartData: any[] = [];
+
+    if (data) {
+        chartData = data.map(convertData);
+    }
+
     return (
-        <boardSt.Container>
+        <ChartWrap>
             {isLoading
                 ? <boardSt.LoadingMsg><p>{message}</p></boardSt.LoadingMsg>
-                : <ChartWrap>
-                    {coinId}
-                </ChartWrap>
+                : <ApexCharts
+                    type='candlestick'
+                    height= '350rem'
+                    series={[{ 
+                            data: chartData
+                        }]}
+                    options={{
+                        theme: {mode: 'dark'},
+                        chart: {
+                            toolbar: {
+                                show: false
+                            },
+                            background: 'transparent',
+                        },
+                        stroke: {width: 1},
+                        plotOptions: {
+                            candlestick: {
+                                colors: {
+                                    upward: '#4D8863',
+                                    downward: '#DE6453'
+                                },
+                            }
+                        },
+                        xaxis: {
+                            labels: {
+                                style: { colors: "#999999" },
+                            },
+                            axisBorder: {
+                                color: '#333333'
+                            }
+                        },
+                        yaxis: {
+                            labels: {
+                                style: { colors: "#999999" }
+                            }
+                        },
+                        grid: {
+                            borderColor: '#333333'
+                        }
+                    }}
+                />
             }
-        </boardSt.Container>
+        </ChartWrap>
     );
 }
 
 const ChartWrap = styled.div`
     overflow: hidden;
     height: 353rem;
-    
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0.4;
-    color: #141518;
-    font-size: ${props => props.theme.fontSize.xxl};
-    font-weight: 600;
-    text-align: center;
-    background-color: ${props => props.theme.colors.primaryTxt};
+    /* background-color: ${props => props.theme.colors.primaryTxt}; */
 `;
 
 export default ChartArea;
