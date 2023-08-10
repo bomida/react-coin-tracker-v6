@@ -3,7 +3,7 @@ import Header from './components/Header';
 import Coinboard from "./pages/dashboard/Coinboard";
 import TradingBoard from "./pages/trading/TradingBoard";
 import RightPanelCoins from "./pages/trading/RightPanel_Coins";
-import RightPanelTrading from "./pages/trading/RightPanel_Trading";
+import RightPanelTrading from "./pages/trading/RightPanel_Trade";
 
 function router() {
     return(
