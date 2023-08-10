@@ -15,7 +15,7 @@ const RightPanelCoins: React.FC<TradingProps> = ({data: tradingCoinsData, loadin
 
     return(
         <RightContainer>
-            <ListTitle>Coin List</ListTitle>
+            <boardSt.RightPanelTitle>Coin List</boardSt.RightPanelTitle>
             <CoinLists>
                 {isLoading
                     ? <boardSt.LoadingMsg><p>{message}</p></boardSt.LoadingMsg>
@@ -30,15 +30,8 @@ const RightPanelCoins: React.FC<TradingProps> = ({data: tradingCoinsData, loadin
     );
 }
 
-const RightContainer = styled.div`
+const RightContainer = styled(boardSt.Container)`
     height: 100%;
-`;
-
-const ListTitle = styled.h3`
-    margin-bottom: 20rem;
-    color: ${props => props.theme.colors.txtBlack};
-    font-size: ${props => props.theme.fontSize.xl};
-    font-weight: 500;
 `;
 
 const CoinLists = styled.ul`

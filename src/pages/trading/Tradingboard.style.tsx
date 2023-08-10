@@ -54,3 +54,10 @@ export const sectionTitle = styled.h3`
     font-weight: 500;
     border-bottom: 1px solid ${props => props.theme.colors.three};
 `;
+
+export const RightPanelTitle = styled.h3`
+    margin-bottom: 20rem;
+    color: ${props => props.theme.colors.txtBlack};
+    font-size: ${props => props.theme.fontSize.xl};
+    font-weight: 500;
+`;
