@@ -4,11 +4,17 @@ import { useQuery } from "react-query";
 import { PriceInfo, fetchPriceData } from "../../apis";
 import { useParams } from 'react-router-dom';
 import ChartArea from '../../components/ChartArea';
+import { useSetRecoilState } from 'recoil';
+import { isTradePanelOpen } from '../../atoms';
 
 
 const LeftPanelChart:React.FC = () => {
     const { coinId } = useParams<{coinId?: string}>();
+    const setTogglePanel = useSetRecoilState(isTradePanelOpen);
     const {isLoading, data: tradeData, error} = useQuery<PriceInfo | undefined>(['tradingData', coinId], () => fetchPriceData(coinId!));
+    const clickChangePanel = () => {
+        setTogglePanel((prev:boolean) => !prev);
+    }
 
     let message = '';
     if (isLoading) message = 'LOADING...';
@@ -24,7 +30,7 @@ const LeftPanelChart:React.FC = () => {
                             <h4>{tradeData?.name}</h4>
                             <p>{tradeData?.symbol}</p>
                         </div>
-                        <BtnTrade>TRADE</BtnTrade>
+                        <BtnTrade onClick={() => clickChangePanel()}>TRADE</BtnTrade>
                     </ChartTitleWrapper>
                     <ChartWrapper>
                         <CurrentPrice>$ {tradeData?.quotes.USD.price.toLocaleString()}<span>USD</span></CurrentPrice>

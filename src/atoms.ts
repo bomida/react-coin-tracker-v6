@@ -5,7 +5,10 @@ export const isSubscribeAtom = atom<string[]>({
     default: [],
 });
 
-
+export const isTradePanelOpen = atom({
+    key: 'isTradePanelOpen',
+    default: false,
+});
 
 
 

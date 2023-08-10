@@ -5,11 +5,13 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { ICoins, fetchCoins } from '../../apis';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
-import { IHeader, headerInfoAtom } from '../../atoms';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { IHeader, headerInfoAtom, isTradePanelOpen } from '../../atoms';
 import { styled } from 'styled-components';
+import RightPanelTrade from './RightPanel_Trade';
 
 const TradingBoard: React.FC = () => {
+    const isTradePanel = useRecoilValue(isTradePanelOpen);
     const {isLoading, data:tradingCoinsData, error} = useQuery<ICoins[] | undefined>(['TradingCoins'], fetchCoins);
     const navigate = useNavigate();
     const { coinId } = useParams<{coinId?: string}>();
@@ -33,14 +35,14 @@ const TradingBoard: React.FC = () => {
     return (
         <boardSt.Wrap>
             <boardSt.Panel>
-                {/* 오른쪽 리스트에서 가져온 정보들을 가지고 차트를 만들어 보여주는 곳 -> 거래 버튼을 누르면 오른쪽 리스트에서 결재를 할 수 있는 판넬이 나온다. */}
                 <LeftPanelChart />
             </boardSt.Panel>
             <RightPanel>
-                {/* 코인 리스트를 보여주는 곳 -> 디폴트 값은 랭크 1번이다. */}
                 {isLoading
                     ? <boardSt.LoadingMsg><p>{message}</p></boardSt.LoadingMsg>
-                    : <RightPanelCoins data={tradingCoinsData} loading={isLoading} message={message} />
+                    : (isTradePanel 
+                        ? <RightPanelTrade />
+                        : <RightPanelCoins data={tradingCoinsData} loading={isLoading} message={message} />)
                 }
             </RightPanel>
         </boardSt.Wrap>
