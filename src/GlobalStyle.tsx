@@ -18,7 +18,8 @@ const GlobalStyle = createGlobalStyle`
         padding: 0;
         border: 0;
         color: inherit;
-        font-size: 100%;
+        /* font-size: 100%; */
+        font: inherit;
         line-height: 1;
         vertical-align: baseline;
         box-sizing: border-box;
@@ -32,7 +33,7 @@ const GlobalStyle = createGlobalStyle`
         /* font-size: 0.0528333vw; */
         /* font-size: 1px; */
         font-size: 0.069vw;
-        font-family: Montserrat, 'Noto Sans', sans-serif;
+        font-family: Montserrat, sans-serif;
         background-color: ${props => props.theme.colors.bg};
     }
     ol, ul {
@@ -41,6 +42,14 @@ const GlobalStyle = createGlobalStyle`
     a {
         color: inherit;
         text-decoration: none;
+    }
+    input:focus-visible {
+        outline: unset;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 `;
 
