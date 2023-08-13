@@ -31,7 +31,7 @@ function Subscribe() {
     if (!isSubscribe.length || !subscribedIds.length) message = 'NO SUBSCIBE COINS :('
 
     return (
-        <SubscribeContainer>
+        <boardSt.Container>
             <boardSt.PanelHead>Subscribe</boardSt.PanelHead>
             <Lists>
                 {(isLoading || !isSubscribe.length)
@@ -55,13 +55,10 @@ function Subscribe() {
                     ))
                 }
             </Lists>
-        </SubscribeContainer>
+        </boardSt.Container>
     );
 }
 
-const SubscribeContainer = styled(boardSt.Container)`
-    grid-column: 2 / 4;
-`;
 const SubscribeLoading = styled(boardSt.LoadingMsg)`
     padding: 30rem;
     width: 100%;

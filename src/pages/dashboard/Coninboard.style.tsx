@@ -1,11 +1,11 @@
 import { styled } from "styled-components";
 
 export const Wrap = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 2fr;
+    display: flex;
     gap: 20rem;
-    margin: 0 auto 40rem;
-    height: calc(100vh - 130rem);
+    margin: 0 auto;
+    padding-bottom: 40rem;
+    height: calc(100vh - 90rem);
     max-width: 1200px;
     min-height: 668px;
     color: #FFFFFF;
@@ -14,7 +14,7 @@ export const RightWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 30rem;
-    height: calc(100% - 40rem);
+    width: 786rem;
 `;
 
 export const Container = styled.div``;

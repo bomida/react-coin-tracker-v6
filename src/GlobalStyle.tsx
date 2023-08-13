@@ -30,9 +30,9 @@ const GlobalStyle = createGlobalStyle`
         display: block;
     }
     html {
-        /* font-size: 0.0528333vw; */
         /* font-size: 1px; */
-        font-size: 0.069vw;
+        /* font-size: 0.069vw; */
+        font-size: 0.052083333333333336vw;
         font-family: Montserrat, sans-serif;
         background-color: ${props => props.theme.colors.bg};
     }

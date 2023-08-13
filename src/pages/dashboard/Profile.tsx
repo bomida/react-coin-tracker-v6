@@ -39,7 +39,7 @@ const data: IMyCoins[] = [
 
 function Profile() {
     return (
-        <ProfileContainer>
+        <boardSt.Container>
             <boardSt.PanelHead>Profile</boardSt.PanelHead>
             <ProfilePanel>
                 <boardSt.sectionTitle>My Assets</boardSt.sectionTitle>
@@ -66,16 +66,13 @@ function Profile() {
                     </DonutChart>
                 </ChartWrapper>
             </ProfilePanel>
-        </ProfileContainer>
+        </boardSt.Container>
     );
 }
 
-const ProfileContainer = styled(boardSt.Container)`
-    grid-column: 1 / 2;
-`;
 const ProfilePanel = styled(boardSt.Panel)`
-    /* height: calc(100% - 40rem); */
-    height: calc(100% - 80rem);
+    width: 394rem;
+    height: calc(100% - 42rem);
 `;
 
 const AssetsLists = styled.ul`

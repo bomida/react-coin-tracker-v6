@@ -38,9 +38,9 @@ export const Market = () => {
 };
 
 const MarketContainer = styled(boardSt.Container)`
-    height: 100%;
+    height: calc(100% - 295rem);
 `;
 const MarketPanel = styled(boardSt.Panel)`
     padding-bottom: 22rem;
-    height: calc(100% - 40rem);
+    height: calc(100% - 45rem);
 `;
