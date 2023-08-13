@@ -7,6 +7,7 @@
 
 # testing
 data/data_coins.json
+data/user_info.json
 
 # production
 /build
