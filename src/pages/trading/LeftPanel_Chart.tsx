@@ -4,16 +4,20 @@ import { useQuery } from "react-query";
 import { PriceInfo, fetchPriceData } from "../../apis";
 import { useParams } from 'react-router-dom';
 import ChartArea from '../../components/ChartArea';
-import { useSetRecoilState } from 'recoil';
-import { isTradePanelOpen } from '../../atoms';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { isTradePanelOpen, isCoinPriceAtom } from '../../atoms';
+import { ButtonHTMLAttributes } from 'react';
 
 
 const LeftPanelChart:React.FC = () => {
     const { coinId } = useParams<{coinId?: string}>();
+    const setCoinPrice = useSetRecoilState(isCoinPriceAtom);
     const setTogglePanel = useSetRecoilState(isTradePanelOpen);
     const {isLoading, data: tradeData, error} = useQuery<PriceInfo | undefined>(['tradingData', coinId], () => fetchPriceData(coinId!));
-    const clickChangePanel = () => {
+    
+    const clickChangePanel = (coinPrice: any) => {
         setTogglePanel((prev:boolean) => !prev);
+        setCoinPrice(coinPrice);
     }
 
     let message = '';
@@ -30,7 +34,7 @@ const LeftPanelChart:React.FC = () => {
                             <h4>{tradeData?.name}</h4>
                             <p>{tradeData?.symbol}</p>
                         </div>
-                        <BtnTrade onClick={() => clickChangePanel()}>TRADE</BtnTrade>
+                        <BtnTrade onClick={() => clickChangePanel(tradeData?.quotes.USD.price)}>TRADE</BtnTrade>
                     </ChartTitleWrapper>
                     <ChartWrapper>
                         <CurrentPrice>$ {tradeData?.quotes.USD.price.toLocaleString()}<span>USD</span></CurrentPrice>

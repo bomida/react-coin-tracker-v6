@@ -14,7 +14,7 @@ const RightPanelCoins: React.FC<TradingProps> = ({data: tradingCoinsData, loadin
     const { coinId } = useParams<{coinId?: string | undefined}>();
 
     return(
-        <RightContainer>
+        <RightCoinContainer>
             <boardSt.RightPanelTitle>Coin List</boardSt.RightPanelTitle>
             <CoinLists>
                 {isLoading
@@ -26,11 +26,11 @@ const RightPanelCoins: React.FC<TradingProps> = ({data: tradingCoinsData, loadin
                     ))
                 }
             </CoinLists>
-        </RightContainer>
+        </RightCoinContainer>
     );
 }
 
-const RightContainer = styled(boardSt.Container)`
+const RightCoinContainer = styled(boardSt.Container)`
     height: 100%;
 `;
 
