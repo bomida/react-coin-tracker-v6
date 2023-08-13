@@ -11,9 +11,15 @@ export const isTradePanelOpen = atom({
 });
 
 
+export const isCoinPriceAtom = atom({
+    key: 'isCoinPrice',
+    default: 0,
+})
 
-
-
+export const isLoginAtom = atom<boolean | null>({
+    key: 'isLogin',
+    default: null,
+});
 
 
 
