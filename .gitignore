@@ -5,9 +5,8 @@
 /.pnp
 .pnp.js
 
-# testing
-data/data_coins.json
-data/user_info.json
+# data 폴더
+src/assets/data
 
 # production
 /build
