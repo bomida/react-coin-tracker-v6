@@ -6,8 +6,8 @@
 .pnp.js
 
 # data 폴더
+db.json
 src/assets/data
-public/assets/data
 
 # production
 /build
