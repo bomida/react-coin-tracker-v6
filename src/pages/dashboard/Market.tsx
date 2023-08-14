@@ -23,7 +23,7 @@ export const Market = () => {
 
     let message = '';
     if (isLoading) message = 'LOADING...';
-    if (error) message = 'SOMETHING HAS BEEN WRONG :(';
+    if (error) message = `${error}`;
 
     return (
         <MarketContainer>
