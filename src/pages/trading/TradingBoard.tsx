@@ -36,9 +36,9 @@ const TradingBoard = () => {
 
     return (
         <boardSt.Wrap>
-            <boardSt.Panel>
+            <LeftPanel>
                 <LeftPanelChart />
-            </boardSt.Panel>
+            </LeftPanel>
             <RightPanel>
                 {isLoading
                     ? <boardSt.LoadingMsg><p>{message}</p></boardSt.LoadingMsg>
@@ -51,7 +51,11 @@ const TradingBoard = () => {
     );
 }
 
+const LeftPanel = styled(boardSt.Panel)`
+    width: 885rem;
+`;
 const RightPanel = styled(boardSt.Panel)`
+    width: 295rem;
     background-color: ${props => props.theme.colors.primary};
 `;
 

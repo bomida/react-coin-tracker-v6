@@ -41,7 +41,7 @@ const ChartArea:React.FC<CoinIdProp> = ({id: coinId}) => {
                 ? <boardSt.LoadingMsg><p>{message}</p></boardSt.LoadingMsg>
                 : <ApexCharts
                     type='candlestick'
-                    height= '350rem'
+                    height= '300rem'
                     series={[{ 
                             data: chartData
                         }]}
@@ -87,7 +87,7 @@ const ChartArea:React.FC<CoinIdProp> = ({id: coinId}) => {
 
 const ChartWrap = styled.div`
     overflow: hidden;
-    height: 353rem;
+    height: 300rem;
     /* background-color: ${props => props.theme.colors.primaryTxt}; */
 `;
 

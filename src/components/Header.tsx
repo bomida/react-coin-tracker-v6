@@ -41,19 +41,21 @@ const Header = () => {
 const UserName = styled.p`
     display: inline-block;
     margin-right: 15rem;
+    color: ${props => props.theme.colors.white};
+    font-weight: 500;
 `;
 const BtnLogInOut = styled.button`
+    color: ${props => props.theme.colors.nine};
     background-color: transparent;
     transition: color .2s ease-in-out;
     cursor: pointer;
 
     &:hover {
-        color: ${props => props.theme.colors.primary};
+        color: ${props => props.theme.colors.primaryTxt};
     }
 `;
 const LoginInfo = styled.div`
     flex-grow: 1;
-    color: ${props => props.theme.colors.white};
     font-size: ${props => props.theme.fontSize.rg};
     text-align: right;
 `;

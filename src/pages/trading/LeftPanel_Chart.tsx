@@ -149,15 +149,31 @@ const ChartSearchPeriod = styled.ul`
 
 const ChartBottWrapper = styled.div`
     margin-top: 30rem;
-    padding-top: 25rem;
+    padding-top: 35rem;
     border-top: 1px solid ${props => props.theme.colors.three};
 
     ul {
-        display: grid;
+        /* display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(2, 1fr);
         gap: 20rem 100rem;
-        margin-right: 400rem;
+        margin-right: 400rem; */
+        display: flex;
+        justify-content: space-between;
+
+        li {
+            position: relative;
+            padding-left: 15rem;
+
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                width: 2rem;
+                height: 100%;
+                background-color: ${props => props.theme.colors.three};
+            }
+        }
     }
 `;
 const PriceLabel = styled.span`

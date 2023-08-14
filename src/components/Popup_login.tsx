@@ -33,7 +33,7 @@ const PopupLogin = () => {
             setIsLogin(true);
             setLoggedInUser(loggedInUserInfo);
         }
-        
+
         if (e) e.preventDefault();
     }
 
@@ -59,7 +59,7 @@ const PopupLogin = () => {
         <PopupContainer>
             <PopupDiv>
                 <LoginHead>Login</LoginHead>
-                <LoginInput type='text' value={idValue} onChange={e => setIdValue(e.target.value)} onKeyUp={keyUpCheck} placeholder="ID" />
+                <LoginInput type='text' value={idValue} onChange={e => setIdValue(e.target.value)} onKeyUp={keyUpCheck} placeholder="ID" autoFocus />
                 <LoginInput type='password' value={passwordValue} onChange={e => setPasswordValue(e.target.value)} onKeyUp={keyUpCheck} placeholder="Password" />
                 <SubmitLogin onClick={clickUserInfoCheck}>Login</SubmitLogin>
             </PopupDiv>

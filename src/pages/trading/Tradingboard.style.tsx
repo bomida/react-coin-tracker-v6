@@ -1,11 +1,11 @@
 import { styled } from "styled-components";
 
 export const Wrap = styled.div`
-    display: grid;
-    grid-template-columns: 3fr 1fr;
+    display: flex;
     gap: 20rem;
-    margin: 0 auto 40rem;
-    height: calc(100vh - 130rem);
+    margin: 0 auto;
+    padding-bottom: 40rem;
+    height: calc(100vh - 90rem);
     max-width: 1200px;
     min-height: 668px;
     color: #FFFFFF;
