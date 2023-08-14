@@ -1,9 +1,10 @@
+import coinsData from "./assets/data/data_coins.json";
 let BASE_URL = 'https://api.coinpaprika.com/v1'
 export let IMG_URL = 'https://cryptocurrencyliveprices.com/img/';
 
 export function fetchCoins() {
     // return fetch(`${BASE_URL}/coins`).then((response) => response.json());
-    return fetch('assets/data/data_coins.json/coins').then((response) => response.json());
+    return Promise.resolve(coinsData);
 }
 export interface ICoins {
     "id": string;
