@@ -12,8 +12,7 @@ import { useRecoilValue } from 'recoil';
 import { isLoginAtom, isTradePanelOpen } from '../../atoms';
 
 
-const TradingBoard: React.FC = () => {
-    const isLogin = useRecoilValue(isLoginAtom);
+const TradingBoard = () => {
     const isTradePanel = useRecoilValue(isTradePanelOpen);
     const {isLoading, data:tradingCoinsData, error} = useQuery<ICoins[] | undefined>(['TradingCoins'], fetchCoins);
     const navigate = useNavigate();
@@ -48,9 +47,6 @@ const TradingBoard: React.FC = () => {
                         : <RightPanelCoins data={tradingCoinsData} loading={isLoading} message={message} />)
                 }
             </RightPanel>
-
-            {/* 거래 버튼 클릭 햇을 때 isLogin 조회 / 로그인 상태가 false면 팝업 / 로그인 상태가 true면 팝업 띄윚 않기 */}
-            {isLogin && <PopupLogin />}
         </boardSt.Wrap>
     );
 }
