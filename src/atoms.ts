@@ -21,7 +21,31 @@ export const isLoginAtom = atom<boolean | null>({
     default: null,
 });
 
+export const loggedInUserAtom = atom<IUserInfo | null>({
+    key: 'loggedInUser',
+    default: null,
+});
 
+// getLoginInfo
+interface IPortfolioItem {
+    coinId: string;
+    quantity: number;
+    amount: number;
+    traded_amt: number;
+}
+
+interface ISubscribeItem {
+    coinId: string;
+}
+
+export interface IUserInfo {
+    id: string;
+    password: string;
+    name: string;
+    account: number;
+    portfolio: IPortfolioItem[];
+    subscribe: ISubscribeItem[];
+}
 
 
 

@@ -62,7 +62,7 @@ const RightPanelTrade = () => {
             {optionValue === 1 && <TypeQuantity isCoinPrice={isCoinPrice}/>}
             {optionValue === 2 && <TypePrice isCoinPrice={isCoinPrice}/>}
 
-            <BtnTransaction onClick={() => setIsLogin(true)}>{checkedStatus ? 'buy' : 'sell'}</BtnTransaction>
+            <BtnTransaction onClick={() => setIsLogin(false)}>{checkedStatus ? 'buy' : 'sell'}</BtnTransaction>
         </RightTradeContainer>
     );
 }
@@ -188,7 +188,7 @@ const SelectBox = styled.div<{isSelectOpen: boolean}>`
     padding: 9rem 0rem;
     border-radius: 10rem;
     border: 1px solid${props => props.isSelectOpen ? props.theme.colors.txtBlack : props.theme.colors.primaryTxt};
-    transition: all .2s ease-in-out;
+    transition: border-color .2s ease-in-out;
     cursor: pointer;
 
     &:hover {
@@ -218,7 +218,7 @@ const SelectLabel = styled.label`
     color: ${props => props.theme.colors.primaryTxt};
     font-size: ${props => props.theme.fontSize.rg};
     font-weight: 500;
-    transition: all .2s ease-in-out;
+    transition: color .2s ease-in-out;
     cursor: pointer;
     
     &:hover {
@@ -305,7 +305,6 @@ const OrderTypeInput = styled.input.attrs({ type: 'radio'})`
 const SelectedTypeContainer = styled.div`
     position: relative;
     top: 30rem;
-    /* margin-top: 30rem; */
 `;
 const TypeComment = styled.div`
     color: ${props => props.theme.colors.txtBlack};
@@ -316,7 +315,7 @@ const InputWrapper = styled.div`
     align-items: center;
     gap: 5rem;
     margin: 10rem 0;
-    padding: 18rem 15rem;
+    padding: 15rem 15rem 16rem;
     width: 100%;
     color: ${props => props.theme.colors.three};
     font-size: ${props => props.theme.fontSize.rg};
@@ -324,7 +323,7 @@ const InputWrapper = styled.div`
     text-transform: uppercase;
     border: 1px solid ${props => props.theme.colors.nine};
     border-radius: 10rem;
-    transition: all .2s ease-in-out;
+    transition: border-color .2s ease-in-out;
 
     &:has(input:focus) {
         border-color: ${props => props.theme.colors.txtBlack};

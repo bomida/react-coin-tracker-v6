@@ -1,21 +1,69 @@
-import { useSetRecoilState } from "recoil";
-import { isLoginAtom } from "../atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { IUserInfo, isLoginAtom, loggedInUserAtom } from "../atoms";
 import * as boardSt from "../pages/trading/Tradingboard.style";
 import { styled } from "styled-components";
+import React, { useEffect, useState } from "react";
+
 
 const PopupLogin = () => {
-    const setIsLogin = useSetRecoilState(isLoginAtom);
+    const [userInfo, setUserInfo] = useState<IUserInfo[] | null>(null);
+    const [idValue, setIdValue] = useState('');
+    const [passwordValue, setPasswordValue] = useState('');
+    const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
+    const setLoggedInUser = useSetRecoilState<IUserInfo | null>(loggedInUserAtom);
+
+    // 로그인 정보 체크
+    const clickUserInfoCheck = (e?: React.MouseEvent<HTMLButtonElement>) => {
+        let id = '';
+        let password = '';
+        let loggedInUserInfo: IUserInfo | null = null;
+
+        if (userInfo !== null) {
+            for (let info of userInfo) {
+                if (info.id === idValue && info.password === passwordValue) {
+                    id = info.id;
+                    password = info.password;
+                    loggedInUserInfo = info;
+                    break;
+                }
+            }
+        }
+
+        if (isLogin === false && (id === idValue && password === passwordValue)) {
+            setIsLogin(true);
+            setLoggedInUser(loggedInUserInfo);
+        }
+        
+        if (e) e.preventDefault();
+    }
+
+    const keyUpCheck = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        let key = e.key;
+        if (key === "Enter") clickUserInfoCheck();
+    }
+
+    useEffect(() => {
+        fetch('/assets/data/user_info.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => setUserInfo(data))
+        .catch(error => console.error(error));
+    } ,[]);
 
 
     return(
         <PopupContainer>
             <PopupDiv>
                 <LoginHead>Login</LoginHead>
-                <LoginInput type='text' placeholder="ID" />
-                <LoginInput type='password' placeholder="Password" />
-                <SubmitLogin>Login</SubmitLogin>
+                <LoginInput type='text' value={idValue} onChange={e => setIdValue(e.target.value)} onKeyUp={keyUpCheck} placeholder="ID" />
+                <LoginInput type='password' value={passwordValue} onChange={e => setPasswordValue(e.target.value)} onKeyUp={keyUpCheck} placeholder="Password" />
+                <SubmitLogin onClick={clickUserInfoCheck}>Login</SubmitLogin>
             </PopupDiv>
-            <ClosePopup onClick={() => setIsLogin(null)}>로그인하지 않고 둘러보기</ClosePopup>
+            <ClosePopup type="submit" onClick={() => setIsLogin(null)}>로그인하지 않고 둘러보기</ClosePopup>
         </PopupContainer>
     );
 }
@@ -71,6 +119,7 @@ const PopupDiv = styled(boardSt.Panel)`
 `;
 
 const ClosePopup = styled.button`
+    color: ${props => props.theme.colors.white};
     font-size: ${props => props.theme.fontSize.sm};
     background-color: transparent;
     cursor: pointer;

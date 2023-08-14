@@ -1,11 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from './components/Header';
+import PopupLogin from "./components/Popup_login";
 import Coinboard from "./pages/dashboard/Coinboard";
 import TradingBoard from "./pages/trading/TradingBoard";
-import RightPanelCoins from "./pages/trading/RightPanel_Coins";
-import RightPanelTrading from "./pages/trading/RightPanel_Trade";
+import { useRecoilValue } from "recoil";
+import { isLoginAtom } from "./atoms";
 
-function router() {
+function Router() {
+    const isLogin = useRecoilValue(isLoginAtom);
+
     return(
         <BrowserRouter>
             <Header />
@@ -16,9 +19,14 @@ function router() {
                     <Route path="detail" element={<RightPanelTrading />} /> */}
                 </Route>
             </Routes>
-
-
-
+            {/* 
+                원래 상태 null
+                거래 버튼 클릭 햇을 때 isLogin 조회 
+                    - 로그인 상태가 false면 팝업
+                    - 로그인 상태가 true면 팝업 띄우지 않기
+                Gng에 login 버튼 눌렀을 때 isLogin 조회
+            */}
+            {isLogin === false && <PopupLogin />}
 
 
 
@@ -34,4 +42,4 @@ function router() {
 }
 
 
-export default router;
+export default Router;
