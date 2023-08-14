@@ -1,6 +1,9 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
+    #root {
+        padding: 0 40rem;
+    }
     html, body, div, span, applet, object, iframe,
     h1, h2, h3, h4, h5, h6, p, blockquote, pre,
     a, abbr, acronym, address, big, cite, code,
@@ -18,7 +21,6 @@ const GlobalStyle = createGlobalStyle`
         padding: 0;
         border: 0;
         color: inherit;
-        /* font-size: 100%; */
         font: inherit;
         line-height: 1;
         vertical-align: baseline;
@@ -30,9 +32,8 @@ const GlobalStyle = createGlobalStyle`
         display: block;
     }
     html {
-        /* font-size: 1px; */
         /* font-size: 0.069vw; */
-        font-size: 0.052083333333333336vw;
+        font-size: 1px;
         font-family: Montserrat, sans-serif;
         background-color: ${props => props.theme.colors.bg};
     }
@@ -50,6 +51,15 @@ const GlobalStyle = createGlobalStyle`
     input[type="number"]::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
+    }
+
+
+    @media (max-width: 1199px) {
+        html {
+            /* font-size: 0.052083333333333336vw; */
+            font-size: 0.083vw;
+        }
+        
     }
 `;
 
