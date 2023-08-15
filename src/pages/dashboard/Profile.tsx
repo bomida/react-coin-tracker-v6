@@ -1,70 +1,87 @@
 import { styled } from "styled-components";
-import * as boardSt from "./Coninboard.style"
+import * as boardSt from "./Coninboard.style";
+import ProfileAssets from "./ProfileAssets";
+import ProfileBalance from "./ProfileBalance";
+import { useRecoilValue } from "recoil";
+import { isLoginAtom, loggedInUserAtom } from "../../atoms";
+import { useQuery } from "react-query";
+import { ICoins, PriceInfo, fetchPriceData } from "../../apis";
+import { useEffect, useRef, useState } from "react";
 
-interface IMyCoins {
-    id: number;
-    coinName: string;
-    coinNameShort: string;
-    coinAmount: string;
-    profitRate: string;
-    profitAmount: string;
+
+export interface IMyCoins {
+    id: string;
+    name: string;
+    symbol: string;
+    quantity: number;
+    amount: number;
+    change: number;
 }
 
-const data: IMyCoins[] = [
-    {   
-        id: 1,
-        coinName: 'Eheriuem',
-        coinNameShort: 'ETR',
-        coinAmount: '1.55',
-        profitRate: '- 21.3',
-        profitAmount: '600000',
-    },
-    {   
-        id: 2,
-        coinName: 'WAVES',
-        coinNameShort: 'WAVES',
-        coinAmount: '115.555',
-        profitRate: '+ 10.25',
-        profitAmount: '1360',
-    },
-    {   
-        id: 3,
-        coinName: 'VChain',
-        coinNameShort: 'VET',
-        coinAmount: '1.2',
-        profitRate: '- 4.853',
-        profitAmount: '24000',
-    }
-];
 
 function Profile() {
+    const isLogin = useRecoilValue(isLoginAtom);
+    // assets
+    let [newProfileData, setNewProfileData] = useState<IMyCoins[]>([]);
+    const loggedInUser = useRecoilValue(loggedInUserAtom);
+    
+    let portfolio = loggedInUser ? loggedInUser.portfolio.map((myCoinId) => myCoinId.coinId) : [];
+    const { isLoading, data: assetsData } = useQuery<PriceInfo[]>(['assetsCoins'],
+        async () => {
+            return Promise.all(portfolio
+                .filter((coinId): coinId is string => typeof coinId === "string")
+                .map((coinId) => fetchPriceData(coinId))
+            );
+        }, {
+            enabled: !!portfolio.length,
+            staleTime: 1000 * 60 * 10, // api block을 막기위해 캐시 만료 기간을 10분으로 설정
+        }
+    );
+    console.log(!isLoading && assetsData);
+    console.log(loggedInUser?.portfolio);
+
+    useEffect(() => {
+        if (!isLoading) {
+            loggedInUser?.portfolio.forEach(myCoin => {
+                const assetData = assetsData?.find((data) => data.id === myCoin.coinId);
+                console.log(assetsData?.find((data) => data.id === myCoin.coinId));
+                
+                if (assetData) {
+                    const id = assetData.id;
+                    const name = assetData.name;
+                    const symbol = assetData.symbol;
+                    const quotesAmt = assetData.quotes.USD.price;
+                    const quantity = myCoin.quantity;
+                    const amount = quantity * quotesAmt;
+                    const tradedAmt = myCoin.traded_amt;
+                    const change = ((quotesAmt - tradedAmt) / tradedAmt) * 100;
+                    console.log(quantity)
+                    console.log(quotesAmt)
+                    console.log(tradedAmt)
+
+                    let newData: IMyCoins = {
+                        id: id,
+                        name: name,
+                        symbol: symbol,
+                        quantity: quantity,
+                        amount: amount,
+                        change: change
+                    }
+
+                    if (!newProfileData.find(item => item.id === newData.id)) {
+                        setNewProfileData(prev => [...prev, newData]);
+                    }
+                }
+            });
+        }
+    }, [isLoading, loggedInUser, assetsData, newProfileData, isLogin]);
+
     return (
         <boardSt.Container>
             <boardSt.PanelHead>Profile</boardSt.PanelHead>
             <ProfilePanel>
-                <boardSt.sectionTitle>My Assets</boardSt.sectionTitle>
-                <AssetsLists>
-                    {data?.map(myCoin => (
-                            <AssetsItem key={myCoin.id}>
-                                <InfoWrapper>
-                                    <MyCoinName>{myCoin.coinName}<span>{myCoin.coinNameShort}</span></MyCoinName>
-                                    <MyCoinAmount>{myCoin.coinAmount}<span>{myCoin.coinNameShort}</span></MyCoinAmount>
-                                </InfoWrapper>
-                                <InfoWrapper>
-                                    <ProfitRate>{myCoin.profitRate}%</ProfitRate>
-                                    <ProfitAmount>${Number(myCoin.profitAmount).toLocaleString()}</ProfitAmount>
-                                </InfoWrapper>
-                            </AssetsItem>
-                        ))}
-                </AssetsLists>
-
-                <boardSt.sectionTitle>Balance</boardSt.sectionTitle>
-                <ChartWrapper>
-                    <DonutChart>
-                        <span>Profit</span>
-                        <p>$234,734</p>
-                    </DonutChart>
-                </ChartWrapper>
+                <ProfileAssets newProfileData={newProfileData} isLogin={isLogin} />
+                <ProfileBalance isLogin={isLogin} />
             </ProfilePanel>
         </boardSt.Container>
     );
@@ -73,79 +90,6 @@ function Profile() {
 const ProfilePanel = styled(boardSt.Panel)`
     width: 394rem;
     height: calc(100% - 42rem);
-`;
-
-const AssetsLists = styled.ul`
-    margin: 15rem 0 35rem;
-`;
-const AssetsItem = styled.li`
-    display: flex;
-    flex-direction: column;
-    gap: 6rem;
-    padding: 15rem;
-    border-radius: 15rem;
-    transition: all .3s ease-in-out;
-`;
-const InfoWrapper = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-`;
-const MyCoinName = styled.h5`
-    font-size: ${props => props.theme.fontSize.md};
-    font-weight: 600;
-
-    span {
-        margin-left: 4rem;
-        color: ${props => props.theme.colors.nine};
-        font-size: ${props => props.theme.fontSize.sm};
-        font-weight: 400;
-    }
-`;
-const MyCoinAmount = styled.p`
-    font-size: ${props => props.theme.fontSize.md};
-    font-weight: 500;
-
-    span {
-        margin-left: 4rem;
-    }
-`;
-const ProfitRate = styled.p`
-    color: ${props => props.theme.colors.green};
-    font-size: ${props => props.theme.fontSize.sm};
-`;
-const ProfitAmount = styled.p`
-    color: ${props => props.theme.colors.nine};
-    font-size: ${props => props.theme.fontSize.sm};
-    font-weight: 400;
-`;
-
-const ChartWrapper = styled(boardSt.Container)`
-    display: flex;
-    align-items: center;
-    height: calc(100% - 300rem);
-`;
-const DonutChart = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5rem;
-    margin: 35rem auto 0;
-    width: 200rem;
-    height: 200rem;
-    border: 7px solid ${props => props.theme.colors.primary};
-    border-radius: 50%;
-
-    span {
-        color: ${props => props.theme.colors.nine};
-        font-size: ${props => props.theme.fontSize.sm};
-    }
-
-    p {
-        font-size: ${props => props.theme.fontSize.xl};
-        font-weight: 600;
-    }
 `;
 
 export default Profile;
