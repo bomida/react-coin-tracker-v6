@@ -1,6 +1,11 @@
+import axios from "axios";
 import coinsData from "./assets/data/data_coins.json";
 let BASE_URL = 'https://api.coinpaprika.com/v1'
 export let IMG_URL = 'https://cryptocurrencyliveprices.com/img/';
+
+export const userInfoApi = axios.create({
+    baseURL: 'http://localhost:5000'
+});
 
 export function fetchCoins() {
     // return fetch(`${BASE_URL}/coins`).then((response) => response.json());

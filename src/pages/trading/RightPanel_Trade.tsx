@@ -2,16 +2,23 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import * as boardSt from './Tradingboard.style';
 import { styled } from 'styled-components';
 import { ReactComponent as SelectArrow } from "../../assets/btn_select_arrow.svg";
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { isCoinPriceAtom, isLoginAtom } from '../../atoms';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { IPortfolioItem, IUserInfo, isCoinPriceAtom, isLoginAtom, isPriceAtom, isQuantityAtom, loggedInUserAtom } from '../../atoms';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { userInfoApi } from '../../apis';
 
 
 const RightPanelTrade = () => {
+    const { coinId } = useParams<{coinId?: string}>();
+    const [loggedInUser, setLoggedInUser] = useRecoilState(loggedInUserAtom);
     const isCoinPrice = useRecoilValue(isCoinPriceAtom);
+    const isQuantityValue = useRecoilValue(isQuantityAtom);
+    const isPriceValue = useRecoilValue(isPriceAtom);
     const [checkedStatus, setCheckedStatus] = useState(true);
     const [isSelectOpen, setIsSelectOpen] = useState(false);
     const [optionValue, setOptionValue] = useState<number>(1);
-    const setIsLogin = useSetRecoilState(isLoginAtom);
+    const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
     const selectRef = useRef<HTMLDivElement>(null);
 
     const handleClickOpen = () => {
@@ -31,7 +38,76 @@ const RightPanelTrade = () => {
         }
     }
 
+    const clickExcuteTrade = () => {
+        let quantity = 0;
+        let amount = 0;
+
+        // 1. 로그인 상태인지 체크
+        if (isLogin !==  true) {
+            setIsLogin(false);
+            return;
+        }
+
+        // 2. 거래 종류 체크 (true: buy / false: sell)
+        if (checkedStatus) {
+            // 수량
+            if (isQuantityValue) {
+                quantity = Number(isQuantityValue);
+                amount = isCoinPrice * parseFloat(isQuantityValue.replace(/,/g, ''));
+            }
+            // 금액
+            if (isPriceValue) {
+                quantity = isCoinPrice / parseFloat(isPriceValue.replace(/,/g, ''));
+                amount = Number(isPriceValue);
+            }
+        }
+
+        // 3. 추가할 코인 정보
+        let tradeResult = {
+            coinId: coinId,
+            quantity: quantity,
+            amount: amount,
+            traded_amt: isCoinPrice
+        };
+
+        
+        // 4. portfolio에 기존 정보가 있는지 신규인지
+        let foundAsset = false;
+        const updatePortfolio: IPortfolioItem[] = loggedInUser?.portfolio.map((assets: IPortfolioItem) => {
+            if (assets.coinId === tradeResult.coinId) {
+                console.log('TRUE');
+                foundAsset = true;
+                
+                return {
+                    ...assets,
+                    quantity: assets.quantity + tradeResult.quantity,
+                    amount: assets.amount + tradeResult.amount,
+                    traded_amt: (assets.traded_amt + tradeResult.traded_amt) / 2
+                };
+            } 
+            return assets;
+        }) || [];
+
+        if (!foundAsset) {
+            console.log('FALSE');
+            updatePortfolio.push(tradeResult);
+        }
+
+        // 5. 최종 coin 정보 추가
+        setLoggedInUser(prev => {
+            if (prev && typeof prev.account === "number") {
+                return {
+                    ...prev,
+                    account: prev.account - amount,
+                    portfolio: updatePortfolio
+                }
+            }
+            return prev;
+        });
+    }
+
     useEffect(() => {
+        // select 박스가 아닌 곳을 클릭했을 때 닫기
         document.addEventListener('mousedown', handleDocumentClick);
         return() => {
             document.addEventListener('mousedown', handleDocumentClick);
@@ -62,7 +138,17 @@ const RightPanelTrade = () => {
             {optionValue === 1 && <TypeQuantity isCoinPrice={isCoinPrice}/>}
             {optionValue === 2 && <TypePrice isCoinPrice={isCoinPrice}/>}
 
-            <BtnTransaction onClick={() => setIsLogin(false)}>{checkedStatus ? 'buy' : 'sell'}</BtnTransaction>
+                {loggedInUser?.portfolio.map(assets => (
+                    assets.coinId === coinId && 
+                        <OwnedCoinInfo>
+                            <p>Owned Coin Info</p>
+                            <p>{assets.quantity} ea</p>
+                            <p>$ {assets.amount}</p>
+                        </OwnedCoinInfo>
+                    )
+                )}
+
+            <BtnTransaction onClick={clickExcuteTrade}>{checkedStatus ? 'buy' : 'sell'}</BtnTransaction>
         </RightTradeContainer>
     );
 }
@@ -72,10 +158,9 @@ interface CoinPriceProps {
 }
 
 const TypeQuantity:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
-    const [isQuantity, setIsQuantity] = useState('');
+    const [isQuantityValue, setIsQuantity] = useRecoilState(isQuantityAtom);
     const [isRadioChecked, setIsRadioChecked] = useState<number | null>(null);
-    const resultPrice = isCoinPrice * parseFloat(isQuantity.replace(/,/g, ''));
-
+    const resultPrice = isCoinPrice * parseFloat(isQuantityValue.replace(/,/g, ''));
     const changeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
         const numericValue = parseFloat(e.target.value.replace(/,/g, ''));
         const formattedValue = isNaN(numericValue) ? '' : numericValue.toLocaleString();
@@ -88,8 +173,8 @@ const TypeQuantity:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
     }
 
     useEffect(() => {
-        if(isQuantity === '') setIsRadioChecked(null);
-    }, [isQuantity]);
+        if(isQuantityValue === '') setIsRadioChecked(null);
+    }, [isQuantityValue]);
 
     const quantitiesArr = [10, 50, 100, 500, 1000];
 
@@ -97,7 +182,7 @@ const TypeQuantity:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
         <SelectedTypeContainer>
             <TypeComment>How many?</TypeComment>
             <InputWrapper>
-                <input type='text' placeholder='Quantity' value={isQuantity} onChange={changeQuantity} />
+                <input type='text' placeholder='Quantity' value={isQuantityValue} onChange={changeQuantity} />
                 <span>ea</span>
             </InputWrapper>
             <SelectedRadioGroup>
@@ -117,14 +202,14 @@ const TypeQuantity:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
             </SelectedRadioGroup>
             <TotalPriceWrapper>
                 <span>Total Price</span>
-                <p>$<b>{!resultPrice ? 0 : resultPrice.toLocaleString()}</b></p>
+                <p>$<b>{!resultPrice ? 0 : resultPrice}</b></p>
             </TotalPriceWrapper>
         </SelectedTypeContainer>
     );
 }
 
 const TypePrice:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
-    const [isPriceValue, setIsPriceValue] = useState('');
+    const [isPriceValue, setIsPriceValue] = useRecoilState(isPriceAtom);
     const [isRadioChecked, setIsRadioChecked] = useState<number |  null>(null);
     const resultQuantity = isCoinPrice / parseFloat(isPriceValue.replace(/,/g, ''));
 
@@ -177,6 +262,16 @@ const TypePrice:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
     );
 }
 
+
+const OwnedCoinInfo = styled.div`
+    color: ${props => props.theme.colors.txtBlack};
+    font-size: ${props => props.theme.fontSize.rg};
+
+    p:first-child {
+        margin: 25rem 0 8rem;
+        font-weight: 500;
+    }
+`;
 
 const SelectBox = styled.div<{isSelectOpen: boolean}>`
     display: flex;
@@ -303,8 +398,7 @@ const OrderTypeInput = styled.input.attrs({ type: 'radio'})`
 `;
 
 const SelectedTypeContainer = styled.div`
-    position: relative;
-    top: 30rem;
+    margin-top: 30rem;
 `;
 const TypeComment = styled.div`
     color: ${props => props.theme.colors.txtBlack};

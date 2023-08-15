@@ -27,8 +27,8 @@ export const loggedInUserAtom = atom<IUserInfo | null>({
 });
 
 // getLoginInfo
-interface IPortfolioItem {
-    coinId: string;
+export interface IPortfolioItem {
+    coinId: string | undefined;
     quantity: number;
     amount: number;
     traded_amt: number;
@@ -46,6 +46,18 @@ export interface IUserInfo {
     portfolio: IPortfolioItem[];
     subscribe: ISubscribeItem[];
 }
+
+export const isQuantityAtom = atom({
+    key: 'isQuantityValue',
+    default: ''
+});
+export const isPriceAtom = atom({
+    key: 'isPriceValue',
+    default: ''
+});
+
+
+
 
 
 

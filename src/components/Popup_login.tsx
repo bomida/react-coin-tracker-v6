@@ -3,6 +3,7 @@ import { IUserInfo, isLoginAtom, loggedInUserAtom } from "../atoms";
 import * as boardSt from "../pages/trading/Tradingboard.style";
 import { styled } from "styled-components";
 import React, { useEffect, useState } from "react";
+import { userInfoApi } from "../apis";
 
 
 const PopupLogin = () => {
@@ -43,14 +44,8 @@ const PopupLogin = () => {
     }
 
     useEffect(() => {
-        fetch('/assets/data/user_info.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => setUserInfo(data))
+        userInfoApi.get('/users')
+        .then(response => setUserInfo(response.data))
         .catch(error => console.error(error));
     } ,[]);
 
