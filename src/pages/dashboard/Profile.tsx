@@ -5,7 +5,7 @@ import ProfileBalance from "./ProfileBalance";
 import { useRecoilValue } from "recoil";
 import { isLoginAtom, loggedInUserAtom } from "../../atoms";
 import { useQuery } from "react-query";
-import { ICoins, PriceInfo, fetchPriceData } from "../../apis";
+import { ICoins, PriceInfo, fetchPriceData, userInfoApi } from "../../apis";
 import { useEffect, useRef, useState } from "react";
 
 
@@ -19,12 +19,12 @@ export interface IMyCoins {
 }
 
 
-function Profile() {
+const Profile = () => {
     const isLogin = useRecoilValue(isLoginAtom);
+    const loggedInUser = useRecoilValue(loggedInUserAtom);
+
     // assets
     let [newProfileData, setNewProfileData] = useState<IMyCoins[]>([]);
-    const loggedInUser = useRecoilValue(loggedInUserAtom);
-    
     let portfolio = loggedInUser ? loggedInUser.portfolio.map((myCoinId) => myCoinId.coinId) : [];
     const { isLoading, data: assetsData } = useQuery<PriceInfo[]>(['assetsCoins'],
         async () => {
@@ -37,14 +37,23 @@ function Profile() {
             staleTime: 1000 * 60 * 10, // api block을 막기위해 캐시 만료 기간을 10분으로 설정
         }
     );
-    console.log(!isLoading && assetsData);
-    console.log(loggedInUser?.portfolio);
+
+    // balance
+    // total assets (보유 현금 / 보유 중인 코인 전체 금액)
+    const [totalCoinsAmount, setTotalCoinsAmount] = useState(777777);
+    const chartData = {
+        labels:['Account', 'totalCoinsAmount'],
+        series:[loggedInUser?.account, totalCoinsAmount]
+    }
+
+    // coins balance (보유 중인 코인 지분)
 
     useEffect(() => {
+        // assets
         if (!isLoading) {
             loggedInUser?.portfolio.forEach(myCoin => {
                 const assetData = assetsData?.find((data) => data.id === myCoin.coinId);
-                console.log(assetsData?.find((data) => data.id === myCoin.coinId));
+                // console.log(assetsData?.find((data) => data.id === myCoin.coinId));
                 
                 if (assetData) {
                     const id = assetData.id;
@@ -55,9 +64,6 @@ function Profile() {
                     const amount = quantity * quotesAmt;
                     const tradedAmt = myCoin.traded_amt;
                     const change = ((quotesAmt - tradedAmt) / tradedAmt) * 100;
-                    console.log(quantity)
-                    console.log(quotesAmt)
-                    console.log(tradedAmt)
 
                     let newData: IMyCoins = {
                         id: id,
@@ -74,14 +80,28 @@ function Profile() {
                 }
             });
         }
-    }, [isLoading, loggedInUser, assetsData, newProfileData, isLogin]);
+
+        // balance
+        // /* options = {
+        //         series: [44, 55, 13, 33],
+        //         labels: ['Apple', 'Mango', 'Orange', 'Watermelon']
+        // } */
+        if (isLogin && !isLoading) {
+            if (loggedInUser) {
+                let coinsAmount = loggedInUser?.portfolio.map(coin => coin.amount);
+                // coinsAmount.forEach(coinAmount => {
+                //     setTotalCoinsAmount(prev => prev + coinAmount);
+                // });
+            }
+        }
+    }, [isLoading, newProfileData, loggedInUser, assetsData, isLogin, chartData]);
 
     return (
         <boardSt.Container>
             <boardSt.PanelHead>Profile</boardSt.PanelHead>
             <ProfilePanel>
                 <ProfileAssets newProfileData={newProfileData} isLogin={isLogin} />
-                <ProfileBalance isLogin={isLogin} />
+                <ProfileBalance chartData={chartData} isLogin={isLogin} />
             </ProfilePanel>
         </boardSt.Container>
     );

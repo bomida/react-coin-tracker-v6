@@ -20,6 +20,7 @@ const RightPanelTrade = () => {
     const [optionValue, setOptionValue] = useState<number>(1);
     const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
     const selectRef = useRef<HTMLDivElement>(null);
+    const [isReset, setIsRest] = useState(false);
 
     const handleClickOpen = () => {
         setIsSelectOpen(prev => !prev);
@@ -38,7 +39,7 @@ const RightPanelTrade = () => {
         }
     }
 
-    const clickExcuteTrade = () => {
+    const clickExcuteTrade = async () => {
         let quantity = 0;
         let amount = 0;
 
@@ -70,40 +71,51 @@ const RightPanelTrade = () => {
             traded_amt: isCoinPrice
         };
 
-        
-        // 4. portfolio에 기존 정보가 있는지 신규인지
-        let foundAsset = false;
-        const updatePortfolio: IPortfolioItem[] = loggedInUser?.portfolio.map((assets: IPortfolioItem) => {
-            if (assets.coinId === tradeResult.coinId) {
-                console.log('TRUE');
-                foundAsset = true;
-                
-                return {
-                    ...assets,
-                    quantity: assets.quantity + tradeResult.quantity,
-                    amount: assets.amount + tradeResult.amount,
-                    traded_amt: (assets.traded_amt + tradeResult.traded_amt) / 2
-                };
-            } 
-            return assets;
-        }) || [];
-
-        if (!foundAsset) {
-            console.log('FALSE');
-            updatePortfolio.push(tradeResult);
+        try {
+            const userId = loggedInUser?.id;
+            const response = await userInfoApi.get(`/users/${userId}`);
+            const userData = response.data;
+            userData.portfolio.push(tradeResult);
+            // console.log(userData);
+            const result = await userInfoApi.put(`/users/${userId}`, userData);
+            // console.log(result);
+        } catch(error) {
+            // console.log(error);
         }
 
+        // 0. input reset
+        setIsRest(true);
+        // 4. portfolio에 기존 정보가 있는지 신규인지
+        // let foundAsset = false;
+        // const updatePortfolio: IPortfolioItem[] = loggedInUser?.portfolio.map((assets: IPortfolioItem) => {
+        //     if (assets.coinId === tradeResult.coinId) {
+        //         foundAsset = true;
+                
+        //         return {
+        //             ...assets,
+        //             quantity: assets.quantity + tradeResult.quantity,
+        //             amount: assets.amount + tradeResult.amount,
+        //             traded_amt: (assets.traded_amt + tradeResult.traded_amt) / 2
+        //         };
+        //     } 
+        //     return assets;
+        // }) || [];
+
+        // if (!foundAsset) {
+        //     updatePortfolio.push(tradeResult);
+        // }
+
         // 5. 최종 coin 정보 추가
-        setLoggedInUser(prev => {
-            if (prev && typeof prev.account === "number") {
-                return {
-                    ...prev,
-                    account: prev.account - amount,
-                    portfolio: updatePortfolio
-                }
-            }
-            return prev;
-        });
+        // setLoggedInUser(prev => {
+        //     if (prev && typeof prev.account === "number") {
+        //         return {
+        //             ...prev,
+        //             account: prev.account - amount,
+        //             portfolio: updatePortfolio
+        //         }
+        //     }
+        //     return prev;
+        // });
     }
 
     useEffect(() => {
@@ -135,8 +147,8 @@ const RightPanelTrade = () => {
                 <SelectLabel htmlFor='option2'>Amount</SelectLabel>
             </SelectBox>
 
-            {optionValue === 1 && <TypeQuantity isCoinPrice={isCoinPrice}/>}
-            {optionValue === 2 && <TypePrice isCoinPrice={isCoinPrice}/>}
+            {optionValue === 1 && <TypeQuantity isCoinPrice={isCoinPrice} isReset={isReset} />}
+            {optionValue === 2 && <TypePrice isCoinPrice={isCoinPrice} isReset={isReset} />}
 
                 {loggedInUser?.portfolio.map(assets => (
                     assets.coinId === coinId && 
@@ -153,11 +165,12 @@ const RightPanelTrade = () => {
     );
 }
 
-interface CoinPriceProps {
+interface TradeProps {
     isCoinPrice: number;
+    isReset: boolean;
 }
 
-const TypeQuantity:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
+const TypeQuantity:React.FC<TradeProps> = ({isCoinPrice, isReset}) => {
     const [isQuantityValue, setIsQuantity] = useRecoilState(isQuantityAtom);
     const [isRadioChecked, setIsRadioChecked] = useState<number | null>(null);
     const resultPrice = isCoinPrice * parseFloat(isQuantityValue.replace(/,/g, ''));
@@ -173,8 +186,10 @@ const TypeQuantity:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
     }
 
     useEffect(() => {
-        if(isQuantityValue === '') setIsRadioChecked(null);
-    }, [isQuantityValue]);
+        if (isQuantityValue === '') setIsRadioChecked(null);
+
+        if (isReset) setIsQuantity('');
+    }, [isQuantityValue, isReset]);
 
     const quantitiesArr = [10, 50, 100, 500, 1000];
 
@@ -208,7 +223,7 @@ const TypeQuantity:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
     );
 }
 
-const TypePrice:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
+const TypePrice:React.FC<TradeProps> = ({isCoinPrice, isReset}) => {
     const [isPriceValue, setIsPriceValue] = useRecoilState(isPriceAtom);
     const [isRadioChecked, setIsRadioChecked] = useState<number |  null>(null);
     const resultQuantity = isCoinPrice / parseFloat(isPriceValue.replace(/,/g, ''));
@@ -227,7 +242,9 @@ const TypePrice:React.FC<CoinPriceProps> = ({isCoinPrice}) => {
 
     useEffect(() => {
         if (isPriceValue === '') setIsRadioChecked(null);
-    }, [isPriceValue]);
+
+        if (isReset) setIsPriceValue('');
+    }, [isPriceValue, isReset]);
 
     const pricesArr = [50, 100, 500, 1000];
 

@@ -5,7 +5,7 @@ import { styled } from "styled-components";
 import { useTable } from "react-table";
 import React, { useContext, useMemo } from "react";
 import { IMG_URL, PriceInfo } from "../../apis";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { isSubscribeAtom } from "../../atoms";
 
 interface MarketProps {

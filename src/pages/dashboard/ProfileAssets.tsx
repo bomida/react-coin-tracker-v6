@@ -70,6 +70,7 @@ const MyCoinAmount = styled.p`
 
     span {
         margin-left: 4rem;
+        color: ${props => props.theme.colors.nine};
     }
 `;
 const ProfitRate = styled.p<{$rateStatus: boolean}>`

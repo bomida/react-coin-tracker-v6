@@ -43,8 +43,8 @@ const ChartArea:React.FC<CoinIdProp> = ({id: coinId}) => {
                     type='candlestick'
                     height= '300rem'
                     series={[{ 
-                            data: chartData
-                        }]}
+                        data: chartData
+                    }]}
                     options={{
                         theme: {mode: 'dark'},
                         chart: {
