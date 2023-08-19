@@ -16,11 +16,13 @@ export const isCoinPriceAtom = atom({
     default: 0,
 })
 
+// 로그인 상태
 export const isLoginAtom = atom<boolean | null>({
     key: 'isLogin',
     default: null,
 });
 
+// 로그인한 유저 정보
 export const loggedInUserAtom = atom<IUserInfo | null>({
     key: 'loggedInUser',
     default: null,
