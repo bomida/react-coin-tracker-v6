@@ -18,7 +18,6 @@ export interface IMyCoins {
     change: number;
 }
 
-
 const Profile = () => {
     const isLogin = useRecoilValue(isLoginAtom);
     const loggedInUser = useRecoilValue(loggedInUserAtom);
@@ -40,11 +39,12 @@ const Profile = () => {
 
     // balance
     // total assets (보유 현금 / 보유 중인 코인 전체 금액)
-    const [totalCoinsAmount, setTotalCoinsAmount] = useState(777777);
+    const [totalCoinsAmount, setTotalCoinsAmount] = useState(0);
     const chartData = {
-        labels:['Account', 'totalCoinsAmount'],
-        series:[loggedInUser?.account, totalCoinsAmount]
+        categories: ['Account', 'Total amount of coins'],
+        series: [loggedInUser?.account, totalCoinsAmount]
     }
+
 
     // coins balance (보유 중인 코인 지분)
 
@@ -82,16 +82,12 @@ const Profile = () => {
         }
 
         // balance
-        // /* options = {
-        //         series: [44, 55, 13, 33],
-        //         labels: ['Apple', 'Mango', 'Orange', 'Watermelon']
-        // } */
         if (isLogin && !isLoading) {
             if (loggedInUser) {
                 let coinsAmount = loggedInUser?.portfolio.map(coin => coin.amount);
-                // coinsAmount.forEach(coinAmount => {
-                //     setTotalCoinsAmount(prev => prev + coinAmount);
-                // });
+                let result = coinsAmount.reduce((prev, curr) => prev + curr);
+                let totalAmount = Number(result.toFixed(5));
+                setTotalCoinsAmount(totalAmount);
             }
         }
     }, [isLoading, newProfileData, loggedInUser, assetsData, isLogin, chartData]);

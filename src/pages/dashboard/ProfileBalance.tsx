@@ -5,8 +5,6 @@ import ApexCharts from "react-apexcharts";
 const profileBalance:React.FC<boolean | any> = ({isLogin, chartData}) => {
     let message = '';
     if (!isLogin) message = '로그인 해주세요.';
-    console.log(chartData.series)
-    console.log(chartData.labels)
 
     return(
         <boardSt.Container>
@@ -17,37 +15,77 @@ const profileBalance:React.FC<boolean | any> = ({isLogin, chartData}) => {
                     : <DonutChart>
                         <ApexCharts
                             type='donut'
-                            height='230rem'
+                            height='250rem'
+                            series={chartData.series}
                             options={{
                                 theme: {mode: 'dark'},
+                                labels: chartData.categories,
                                 chart: {
                                     toolbar: {
                                         show: false
                                     },
                                     background: 'transparent',
+                                    events: {
+                                        dataPointMouseEnter: (event, chartContext, config) => {
+                                            let gs = document.querySelectorAll('.apexcharts-pie-series');
+                                            let path = gs[config.dataPointIndex].firstChild as SVGElement;
+                                            if (path) path.style.fill = '#E2E247';
+                                        },
+                                        dataPointMouseLeave(event, chartContext, config) {
+                                            let gs = document.querySelectorAll('.apexcharts-pie-series');
+                                            let path = gs[config.dataPointIndex].firstChild as SVGElement;
+                                            if (path) path.style.fill = '';
+                                        },
+                                    }
                                 },
-                                legend: {
-                                    show: false,
+                                colors: ['#999999' ,'#999999'],
+                                states: {
+                                    hover: {
+                                        filter: {type: 'none'}
+                                    }
                                 },
-                                dataLabels: {
-                                    enabled: false,
+                                legend: {show: false},
+                                dataLabels: {enabled: false},
+                                tooltip: {enabled: false},
+                                stroke: {
+                                    show: true,
+                                    width: 1.5,
+                                    colors: ['#222327']
                                 },
-                                tooltip: {
-                                    enabled: false
-                                },
-                                stroke: {show: false},
                                 plotOptions: {
                                     pie: {
+                                        expandOnClick: false,
                                         donut: {
                                             size: '93rem',
                                             labels: {
-                                                show: false,
+                                                show: true,
+                                                total: {
+                                                    show: true,
+                                                    fontFamily: 'Montserrat, sans-serif',
+                                                    fontSize: '12rem',
+                                                    fontWeight: 400,
+                                                    color: '#999999',
+                                                    // showAlways: true,
+                                                    label: 'Total',
+                                                    formatter: (val) => {
+                                                        return val.config?.series.reduce((a:number, b:number) => {
+                                                            let result = a + b
+                                                            return `$${result.toLocaleString()}`
+                                                        });
+                                                    },
+                                                },
+                                                value: {
+                                                    show: true,
+                                                    offsetY: 3,
+                                                    fontSize: '24rem',
+                                                    fontWeight: 600,
+                                                    fontFamily: 'Montserrat, sans-serif'
+                                                }
                                             },
                                         }
                                     }
                                 }
                             }}
-                            series={chartData.series}
                         />
                     </DonutChart>
                 }
