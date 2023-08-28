@@ -5,8 +5,8 @@ import { styled } from "styled-components";
 import { useTable } from "react-table";
 import React, { useContext, useMemo } from "react";
 import { IMG_URL, PriceInfo } from "../../apis";
-import { useSetRecoilState } from "recoil";
-import { isSubscribeAtom } from "../../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { isLoginAtom, isSubscribeAtom } from "../../atoms";
 
 interface MarketProps {
     data: PriceInfo[] | undefined;
@@ -48,11 +48,14 @@ const iconDecrease = (value: number) => {
 const CheckHandlerContext = React.createContext<Function | null>(null);
 const CheckSubscribe: React.FC<CheckSubscribeProps> = ({id, symbol}) => {
     const checkHandler = useContext(CheckHandlerContext);
+    const checkedVal = useRecoilValue(isSubscribeAtom);
+    const isChecked = checkedVal.includes(id);
+    
     if (!checkHandler) return null;
 
     return (
         <CellSideFlex key={id}>
-            <input type="checkbox" id={symbol} onClick={() => checkHandler(id, symbol)}/>
+            <input type="checkbox" id={symbol} checked={isChecked} onChange={() => checkHandler(id, symbol)}/>
             <label htmlFor={symbol}>
                 <FullWatch /> 
             </label>
@@ -93,9 +96,16 @@ const COLUMNS: any = [
 const CoinPriceData: React.FC<MarketProps> = ({data: priceDataArray}) => {
     const columns = useMemo(() => COLUMNS, []);
     const data = useMemo(() => priceDataArray || [], [priceDataArray]);
+    const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
     const setIsSubscribe = useSetRecoilState(isSubscribeAtom);
 
     const checkHandler = (id: string, symbol: string) => {
+        if (!isLogin) {
+            window.alert('해당 코인에 대한 정보를 즐겨찾기하여 서비스를 이용하고 싶으시다면 로그인을 해주세요.');
+            setIsLogin(false);
+            return null;
+        }
+        
         setIsSubscribe((prev: any) => {
             const checkboxEle = document.querySelector<HTMLInputElement>(`#${symbol}`);
             if (checkboxEle && checkboxEle.checked) {
