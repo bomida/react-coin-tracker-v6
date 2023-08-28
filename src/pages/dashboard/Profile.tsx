@@ -86,10 +86,10 @@ const Profile = () => {
         // balance
         if (isLogin && !isLoading) {
             if (loggedInUser) {
-                let coinsAmount = loggedInUser?.portfolio.map(coin => coin.amount);
-                let result = coinsAmount.reduce((prev, curr) => prev + curr);
-                let totalAmount = Number(result.toFixed(5));
-                setTotalCoinsAmount(totalAmount);
+                let onwCoinsAmount = loggedInUser?.portfolio.map(coin => coin.amount);
+                let plusAmount = onwCoinsAmount.length === 0 ? 0 : onwCoinsAmount.reduce((prev, curr) => prev + curr);
+                let resultTotalAmount = Number(plusAmount.toFixed(5));
+                setTotalCoinsAmount(resultTotalAmount);
             }
         }
     }, [isLoading, newProfileData, loggedInUser, assetsData, isLogin, chartData]);
