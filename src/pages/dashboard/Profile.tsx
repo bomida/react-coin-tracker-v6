@@ -74,9 +74,11 @@ const Profile = () => {
                         change: change
                     }
 
-                    if (!newProfileData.find(item => item.id === newData.id)) {
-                        setNewProfileData(prev => [...prev, newData]);
-                    }
+                    setNewProfileData(prevState => 
+                        prevState.find(item => item.id === newData.id && item.quantity === newData.quantity)
+                        ? prevState
+                        : [...prevState, newData]
+                    );
                 }
             });
         }
