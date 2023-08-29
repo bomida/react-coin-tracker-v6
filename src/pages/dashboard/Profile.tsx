@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import * as boardSt from "./Coninboard.style";
 import ProfileAssets from "./ProfileAssets";
 import ProfileBalance from "./ProfileBalance";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoginAtom, loggedInUserAtom } from "../../atoms";
 import { useQuery } from "react-query";
 import { ICoins, PriceInfo, fetchPriceData, userInfoApi } from "../../apis";
@@ -17,15 +17,14 @@ export interface IMyCoins {
     amount: number;
     change: number;
 }
-
 const Profile = () => {
     const isLogin = useRecoilValue(isLoginAtom);
-    const loggedInUser = useRecoilValue(loggedInUserAtom);
+    const [loggedInUser, setLoggedInUser] = useRecoilState(loggedInUserAtom);
 
     // assets
     let [newProfileData, setNewProfileData] = useState<IMyCoins[]>([]);
     let portfolio = loggedInUser ? loggedInUser.portfolio.map((myCoinId) => myCoinId.coinId) : [];
-    const { isLoading, data: assetsData } = useQuery<PriceInfo[]>(['assetsCoins'],
+    const { isLoading, data: assetsData } = useQuery<PriceInfo[]>(['assetsCoins', portfolio],
         async () => {
             return Promise.all(portfolio
                 .filter((coinId): coinId is string => typeof coinId === "string")
@@ -37,6 +36,7 @@ const Profile = () => {
         }
     );
 
+
     // balance
     // total assets (보유 현금 / 보유 중인 코인 전체 금액)
     const [totalCoinsAmount, setTotalCoinsAmount] = useState(0);
@@ -45,15 +45,23 @@ const Profile = () => {
         series: [loggedInUser?.account, totalCoinsAmount]
     }
 
-
     // coins balance (보유 중인 코인 지분)
 
+
     useEffect(() => {
-        // assets
-        if (!isLoading) {
+        const userId = loggedInUser?.id;
+        if (isLogin && userId) {
+            userInfoApi.get(`/users/${userId}`)
+                .then(response => setLoggedInUser(response.data))
+                .catch((error) => console.log(error));
+        }
+    }, [isLogin, loggedInUser?.id]);
+
+    // assets Effect
+    useEffect(() => {
+        if (isLogin && !isLoading) {
             loggedInUser?.portfolio.forEach(myCoin => {
                 const assetData = assetsData?.find((data) => data.id === myCoin.coinId);
-                // console.log(assetsData?.find((data) => data.id === myCoin.coinId));
                 
                 if (assetData) {
                     const id = assetData.id;
@@ -73,6 +81,7 @@ const Profile = () => {
                         amount: amount,
                         change: change
                     }
+                    // console.log('newData', newData)
 
                     setNewProfileData(prevState => 
                         prevState.find(item => item.id === newData.id && item.quantity === newData.quantity)
@@ -82,8 +91,10 @@ const Profile = () => {
                 }
             });
         }
+    }, [isLogin, isLoading, loggedInUser?.portfolio]);
 
-        // balance
+    // balance Effect
+    useEffect(() => {
         if (isLogin && !isLoading) {
             if (loggedInUser) {
                 let onwCoinsAmount = loggedInUser?.portfolio.map(coin => coin.amount);
@@ -92,7 +103,7 @@ const Profile = () => {
                 setTotalCoinsAmount(resultTotalAmount);
             }
         }
-    }, [isLoading, newProfileData, loggedInUser, assetsData, isLogin, chartData]);
+    }, [isLogin, isLoading, loggedInUser?.portfolio]);
 
     return (
         <boardSt.Container>

@@ -9,11 +9,12 @@ const profileAssets:React.FC<IMyCoins | any | boolean> = ({newProfileData, isLog
     if (newProfileData.length === 0) message = '보유한 코인이 없습니다.';
     if (!isLogin) message = '로그인 해주세요.';
 
+
     return(
         <boardSt.Container>
             <boardSt.sectionTitle>My Assets</boardSt.sectionTitle>
             <AssetsLists>
-                {newProfileData.length === 0
+                {!isLogin || newProfileData.length === 0
                     ? <NoMyCoins><p>{message}</p></NoMyCoins>
                     : newProfileData.map((myCoin: IMyCoins) => (
                         <AssetsItem key={myCoin.id}>
