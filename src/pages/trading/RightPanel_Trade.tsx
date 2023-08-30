@@ -131,9 +131,9 @@ const RightPanelTrade = () => {
         <RightTradeContainer>
             <boardSt.RightPanelTitle>Make a Trade</boardSt.RightPanelTitle>
             <OrderTypeSelectContainer checkedStatus={checkedStatus}>
-                <OrderTypeInput type='radio' name='btn_trade' id='btn_buy' onChange={() => setCheckedStatus(true)} defaultChecked/>
+                <OrderTypeInput key="btnBuy" type='radio' name='btn_trade' id='btn_buy' onChange={() => setCheckedStatus(true)} defaultChecked/>
                 <OrderTypeLabel htmlFor='btn_buy'>buy</OrderTypeLabel>
-                <OrderTypeInput type='radio' name='btn_trade' id='btn_sell' onChange={() => setCheckedStatus(false)}/>
+                <OrderTypeInput key="btnSell" type='radio' name='btn_trade' id='btn_sell' onChange={() => setCheckedStatus(false)}/>
                 <OrderTypeLabel htmlFor='btn_sell'>sell</OrderTypeLabel>
             </OrderTypeSelectContainer>
 
