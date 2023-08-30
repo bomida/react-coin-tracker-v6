@@ -11,6 +11,18 @@ const Header = () => {
     const setIsLogin = useSetRecoilState(isLoginAtom);
     const loggedInUser = useRecoilValue(loggedInUserAtom);
 
+    const handleAuthentication = (loginVal: boolean | null) => {
+        if (loginVal === null && window.confirm('로그아웃 하시겠습니까?')) {
+            setIsLogin(null);
+            sessionStorage.clear();
+            window.alert('정상적으로 로그아웃 되었습니다.');
+        }
+
+        if (loginVal === false) {
+            setIsLogin(false);
+        }
+    }
+
     return(
         <Container>
             <Nav>
@@ -29,9 +41,9 @@ const Header = () => {
                     {isLogin ? (
                         <>
                             <UserName>{loggedInUser?.name}</UserName>
-                            <BtnLogInOut onClick={() => setIsLogin(null)}>Logout</BtnLogInOut>
+                            <BtnLogInOut onClick={() => handleAuthentication(null)}>Logout</BtnLogInOut>
                         </>
-                    ) : <BtnLogInOut onClick={() => setIsLogin(false)}>Login</BtnLogInOut>}
+                    ) : <BtnLogInOut onClick={() => handleAuthentication(false)}>Login</BtnLogInOut>}
                 </LoginInfo>
             </Nav>
         </Container>
