@@ -130,15 +130,15 @@ const RightPanelTrade = () => {
     return(
         <RightTradeContainer>
             <boardSt.RightPanelTitle>Make a Trade</boardSt.RightPanelTitle>
-            <OrderTypeSelectContainer checkedStatus={checkedStatus}>
-                <OrderTypeInput key="btnBuy" type='radio' name='btn_trade' id='btn_buy' onChange={() => setCheckedStatus(true)} defaultChecked/>
+            <OrderTypeSelectContainer $checkedStatus={checkedStatus}>
+                <OrderTypeInput type='radio' name='btn_trade' id='btn_buy' onChange={() => setCheckedStatus(true)} defaultChecked/>
                 <OrderTypeLabel htmlFor='btn_buy'>buy</OrderTypeLabel>
-                <OrderTypeInput key="btnSell" type='radio' name='btn_trade' id='btn_sell' onChange={() => setCheckedStatus(false)}/>
+                <OrderTypeInput type='radio' name='btn_trade' id='btn_sell' onChange={() => setCheckedStatus(false)}/>
                 <OrderTypeLabel htmlFor='btn_sell'>sell</OrderTypeLabel>
             </OrderTypeSelectContainer>
 
             {/* 샐렉트 박스 */}
-            <SelectBox ref={selectRef} isSelectOpen={isSelectOpen} onClick={handleClickOpen}>
+            <SelectBox ref={selectRef} $isSelectOpen={isSelectOpen} onClick={handleClickOpen}>
                 <SelectArrow/>
                 <SelectInput name='option' id='option1' value='1' onChange={handleChangeOption} defaultChecked></SelectInput>
                 <SelectLabel htmlFor='option1'>Quantity</SelectLabel>
@@ -290,16 +290,16 @@ const OwnedCoinInfo = styled.div`
     }
 `;
 
-const SelectBox = styled.div<{isSelectOpen: boolean}>`
+const SelectBox = styled.div<{$isSelectOpen: boolean}>`
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    height: ${props => props.isSelectOpen ? '100rem' : '50rem'};
+    height: ${props => props.$isSelectOpen ? '100rem' : '50rem'};
     margin-top: 50rem;
     padding: 9rem 0rem;
     border-radius: 10rem;
-    border: 1px solid${props => props.isSelectOpen ? props.theme.colors.txtBlack : props.theme.colors.primaryTxt};
+    border: 1px solid${props => props.$isSelectOpen ? props.theme.colors.txtBlack : props.theme.colors.primaryTxt};
     transition: border-color .2s ease-in-out;
     cursor: pointer;
 
@@ -313,7 +313,7 @@ const SelectBox = styled.div<{isSelectOpen: boolean}>`
         right: 15rem;
         z-index: 50;
         stroke: ${props => props.theme.colors.txtBlack};
-        transform: ${props => props.isSelectOpen ? 'rotate(180deg)' : 'rotate(0deg)'} ;
+        transform: ${props => props.$isSelectOpen ? 'rotate(180deg)' : 'rotate(0deg)'} ;
         transition: transform .2s ease-in-out;
     }
 `;
@@ -364,9 +364,9 @@ const RightTradeContainer = styled(boardSt.Container)`
     height: 100%;
 `;
 
-const OrderTypeSelectContainer = styled.div<{checkedStatus: boolean}>`
+const OrderTypeSelectContainer = styled.div<{$checkedStatus: boolean}>`
     display: flex;
-    justify-content: ${props => props.checkedStatus ? 'flex-start' : 'flex-end'};
+    justify-content: ${props => props.$checkedStatus ? 'flex-start' : 'flex-end'};
     position: relative;
     overflow: hidden;
     margin-top: 30rem;
