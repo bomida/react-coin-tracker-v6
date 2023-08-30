@@ -30,9 +30,12 @@ const PopupLogin = () => {
             }
         }
 
-        if (isLogin === false && (id === idValue && password === passwordValue)) {
-            setIsLogin(true);
+        if (!isLogin && (id === idValue && password === passwordValue)) {
             setLoggedInUser(loggedInUserInfo);
+            setIsLogin(true);
+
+            sessionStorage.clear();
+            sessionStorage.setItem('userId', id);
         }
 
         if (e) e.preventDefault();
