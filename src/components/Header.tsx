@@ -1,27 +1,45 @@
 import { styled } from "styled-components";
 import { ReactComponent as Logo } from '../assets/logo.svg';
 import { Link, useMatch } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { isLoginAtom, loggedInUserAtom } from "../atoms";
+import { useEffect } from "react";
+import { userInfoApi } from "../apis";
 
 const Header = () => {
     const dashboardMatch = useMatch('/');
     const tradingMatch = useMatch('/trading/:coinId');
-    const isLogin = useRecoilValue(isLoginAtom);
-    const setIsLogin = useSetRecoilState(isLoginAtom);
-    const loggedInUser = useRecoilValue(loggedInUserAtom);
+    const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
+    const [loggedInUser, setLoggedInUser] = useRecoilState(loggedInUserAtom);
 
     const handleAuthentication = (loginVal: boolean | null) => {
+        // null 일때 popup login창이 내려감
         if (loginVal === null && window.confirm('로그아웃 하시겠습니까?')) {
             setIsLogin(null);
             sessionStorage.clear();
             window.alert('정상적으로 로그아웃 되었습니다.');
         }
 
+        // false 일때 popup login창이 뜸
         if (loginVal === false) {
             setIsLogin(false);
         }
     }
+
+    useEffect(() => {
+        const userId = sessionStorage.getItem('userId');
+
+        if (userId) {
+            userInfoApi.get(`/users/${userId}`)
+            .then(response => {
+                setLoggedInUser(response.data);
+                // true 일때 popup login창이 내려가고 로그인 상태가 됨
+                setIsLogin(true);
+            })
+            .catch(error => console.log(error))
+        }
+    }, []);
+
 
     return(
         <Container>
