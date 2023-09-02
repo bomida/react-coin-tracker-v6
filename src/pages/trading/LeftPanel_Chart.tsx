@@ -46,7 +46,7 @@ const LeftPanelChart:React.FC = () => {
                             <li>ALL</li>
                         </ChartSearchPeriod>
                     </ChartWrapper>
-                    <ChartArea id={coinId} />
+                    <ChartArea coinId={coinId} />
                     <ChartBottWrapper>
                         <ul>
                             <li>

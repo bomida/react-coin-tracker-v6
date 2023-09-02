@@ -7,12 +7,12 @@ import { IOhlcv, PriceInfo, fetchoOhlcvData } from "../apis";
 import { any } from 'prop-types';
 
 interface CoinIdProp {
-    id: string | undefined;
+    coinId: string | undefined;
 }
 
-const ChartArea:React.FC<CoinIdProp> = ({id: coinId}) => {
+const ChartArea:React.FC<CoinIdProp> = ({coinId}) => {
     let valCoinId = Object.values({coinId})[0];
-    const {isLoading, data, error} = useQuery<IOhlcv[]>(['chartData', valCoinId], () => fetchoOhlcvData(valCoinId!));
+    const {isLoading, data: ohlcvData, error} = useQuery<IOhlcv[]>(['chartData', valCoinId], () => fetchoOhlcvData(valCoinId!));
 
     let message = '';
     if (isLoading) message = 'LOADING...';
@@ -31,8 +31,8 @@ const ChartArea:React.FC<CoinIdProp> = ({id: coinId}) => {
 
     let chartData: any[] = [];
 
-    if (data) {
-        chartData = data.map(convertData);
+    if (ohlcvData) {
+        chartData = ohlcvData.map(convertData);
     }
 
     return (
