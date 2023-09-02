@@ -40,8 +40,13 @@ const RightPanelTrade = () => {
     }
 
     const clickExcuteTrade = async () => {
-        let quantity = 0;
-        let amount = 0;
+        let account = 0;
+        let defaultPortfolioItem: IPortfolioItem = {
+            coinId: undefined,
+            quantity: 0,
+            amount: 0,
+            traded_amt: 0
+        };
 
         // 1. 로그인 상태인지 체크
         if (isLogin !==  true) {
@@ -49,73 +54,99 @@ const RightPanelTrade = () => {
             return;
         }
 
-        // 2. 거래 종류 체크 (true: buy / false: sell)
+        if (!loggedInUser) {
+            return;
+        }
+        // 현재 보유 중인 코인인지 확인
+        let matchMyCoin = loggedInUser.portfolio.find(myCoin => myCoin.coinId === coinId) || defaultPortfolioItem;
+        account = loggedInUser.account;
+
+        // 2. 거래 종류 체크 (BUY)
         if (checkedStatus) {
+        
+            // BUY: 수량
+            if (isQuantityValue && account >= defaultPortfolioItem.amount) {
+                defaultPortfolioItem.quantity = matchMyCoin?.quantity + Number(isQuantityValue);
+                defaultPortfolioItem.amount = matchMyCoin?.amount + isCoinPrice * parseFloat(isQuantityValue.replace(/,/g, ''));
+                account = loggedInUser?.account - defaultPortfolioItem.amount;
+            }
+            // BUY: 금액
+            else if (isPriceValue  && account >= defaultPortfolioItem.amount) {
+                defaultPortfolioItem.quantity = matchMyCoin?.quantity + isCoinPrice / parseFloat(isPriceValue.replace(/,/g, ''));
+                defaultPortfolioItem.amount = matchMyCoin?.amount + Number(isPriceValue);
+                account = loggedInUser?.account - defaultPortfolioItem.amount;
+            }
+            else {
+                window.alert('매수 실패: 보유 금액보다 매수 요청 금액이 더 큽니다.');
+                return
+            }
+        }
+
+        // 2. 거래 종류 체크 (SELL)
+        if (!checkedStatus) {
+
+            if (!matchMyCoin) {
+                window.alert('매도 실패: 해당 코인을 보유하고 있지 않습니다.');
+                return;
+            }
+
             // 수량
-            if (isQuantityValue) {
-                quantity = Number(isQuantityValue);
-                amount = isCoinPrice * parseFloat(isQuantityValue.replace(/,/g, ''));
+            if (isQuantityValue && Number(isQuantityValue) <= matchMyCoin.quantity) {
+                defaultPortfolioItem.quantity = matchMyCoin.quantity - Number(isQuantityValue);
+                defaultPortfolioItem.amount = matchMyCoin.amount - (isCoinPrice * parseFloat(isQuantityValue.replace(/,/g, '')));
+                account = loggedInUser?.account + defaultPortfolioItem.amount;
             }
             // 금액
-            if (isPriceValue) {
-                quantity = isCoinPrice / parseFloat(isPriceValue.replace(/,/g, ''));
-                amount = Number(isPriceValue);
+            else if (isPriceValue && Number(isPriceValue) <= matchMyCoin.amount) {
+                defaultPortfolioItem.quantity = matchMyCoin.quantity - (parseFloat(isPriceValue.replace(/,/g, '')) / isCoinPrice);
+                defaultPortfolioItem.amount = Number(isPriceValue);
+                account = loggedInUser?.account + defaultPortfolioItem.amount;
+            }
+            else {
+                window.alert('매도 실패: 보유 금액보다 매도 요청 금액이 더 큽니다.');
             }
         }
 
         // 3. 추가할 코인 정보
         let tradeResult = {
             coinId: coinId,
-            quantity: quantity,
-            amount: amount,
+            quantity: defaultPortfolioItem.quantity,
+            amount: defaultPortfolioItem.amount,
             traded_amt: isCoinPrice
         };
+        console.log('tradeResult', tradeResult);
 
         try {
-            const userId = loggedInUser?.id;
-            const response = await userInfoApi.get(`/users/${userId}`);
+            const userId = loggedInUser?.id; // 현재 사용자 id 가져오기
+            const response = await userInfoApi.get(`/users/${userId}`); // 사용자 데이터 가져오기
             const userData = response.data;
-            userData.portfolio.push(tradeResult);
-            // console.log(userData);
-            const result = await userInfoApi.put(`/users/${userId}`, userData);
-            // console.log(result);
+            // portfolio에서 matchMyCoin과 같은 coinId를 가진 항목 찾기
+            let dupIndex = userData.portfolio.findIndex((prevCoin: {coinId: string}) => prevCoin.coinId === tradeResult.coinId);
+
+            if (dupIndex !== -1) {
+                // 같은 coinId 값을 가진 요소가 있으면 해당 위치에 tradeResult를 넣는다.
+                if(tradeResult.quantity === 0 || tradeResult.amount === 0) {
+                    // 만약 tradeResult의 quantity나 amount가 0이라면 해당 객체를 삭제한다.
+                    userData.portfolio.splice(dupIndex, 1);
+                } else {
+                    userData.portfolio[dupIndex] = tradeResult;
+                }
+            } else {
+                // 같은 coinId 값을 가진 요소가 없으면, 배열에서 제거하고 새로운 tradeResult를 추가한다.
+                // 단, quantity나 amount가 0인 경우는 추가하지 않는다.
+                if(tradeResult.quantity !== 0 && tradeResult.amount !== 0) {
+                    userData.portfolio.push(tradeResult);
+                }
+            }
+
+            
+            await userInfoApi.put(`/users/${userId}`, userData);
         } catch(error) {
             // console.log(error);
         }
 
         // 0. input reset
         setIsRest(true);
-        // 4. portfolio에 기존 정보가 있는지 신규인지
-        // let foundAsset = false;
-        // const updatePortfolio: IPortfolioItem[] = loggedInUser?.portfolio.map((assets: IPortfolioItem) => {
-        //     if (assets.coinId === tradeResult.coinId) {
-        //         foundAsset = true;
-                
-        //         return {
-        //             ...assets,
-        //             quantity: assets.quantity + tradeResult.quantity,
-        //             amount: assets.amount + tradeResult.amount,
-        //             traded_amt: (assets.traded_amt + tradeResult.traded_amt) / 2
-        //         };
-        //     } 
-        //     return assets;
-        // }) || [];
-
-        // if (!foundAsset) {
-        //     updatePortfolio.push(tradeResult);
-        // }
-
-        // 5. 최종 coin 정보 추가
-        // setLoggedInUser(prev => {
-        //     if (prev && typeof prev.account === "number") {
-        //         return {
-        //             ...prev,
-        //             account: prev.account - amount,
-        //             portfolio: updatePortfolio
-        //         }
-        //     }
-        //     return prev;
-        // });
     }
 
     useEffect(() => {
