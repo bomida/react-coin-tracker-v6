@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { userInfoApi } from "../apis";
 
 const Header = () => {
-    const dashboardMatch = useMatch('/');
+    const dashboardMatch = useMatch('coinboard');
     const tradingMatch = useMatch('/trading/:coinId');
     const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
     const [loggedInUser, setLoggedInUser] = useRecoilState(loggedInUserAtom);
@@ -44,12 +44,12 @@ const Header = () => {
     return(
         <Container>
             <Nav>
-                <Link to="/">
+                <Link to="coinboard">
                     <Logo />
                 </Link>
                 <MenuLists>
                     <MenuItem $isActive={dashboardMatch !== null}>
-                        <Link to="/">Dashboard</Link>
+                        <Link to="coinboard">Dashboard</Link>
                     </MenuItem>
                     <MenuItem $isActive={tradingMatch !== null}>
                         <Link to="/trading/:coinId">Trading</Link>
