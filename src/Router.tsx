@@ -13,7 +13,7 @@ function Router() {
         <BrowserRouter>
             <Header />
             <Routes>
-                <Route path="/" element={<Coinboard />} />
+                <Route path="/react-coin-tracker-v6" element={<Coinboard />} />
                 <Route path="/trading/:coinId" element={<TradingBoard />}>
                     {/* <Route path="coins" element={<RightPanelCoins />} />
                     <Route path="detail" element={<RightPanelTrading />} /> */}
