@@ -1,5 +1,6 @@
 {
   "name": "coin-tracker",
+  "homepage": "https://bomida.github.io/react-coin-tracker-v6",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -36,7 +37,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "db": "json-server --watch db.json --port 5000",
-    "start:server": "node server.js"
+    "start:server": "node server.js",
+    "deploy": "gh-pages -d build",
+    "predeploy": "npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -64,6 +67,7 @@
     "@types/node": "^20.5.0",
     "@types/react-helmet": "^6.1.6",
     "@types/styled-components": "^5.1.26",
+    "gh-pages": "^6.1.1",
     "typescript": "^5.1.6"
   }
 }
