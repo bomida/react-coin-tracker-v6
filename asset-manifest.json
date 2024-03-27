@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.js": "/react-coin-tracker-v6/static/js/main.74d5c6e2.js",
+    "static/media/logo.svg": "/react-coin-tracker-v6/static/media/logo.55b85dcab2e530f7d4eeebda03767998.svg",
+    "index.html": "/react-coin-tracker-v6/index.html",
+    "static/media/btn_select_arrow.svg": "/react-coin-tracker-v6/static/media/btn_select_arrow.b7583d7dd468e0324b6dac571dd40672.svg",
+    "static/media/icon_watch_full.svg": "/react-coin-tracker-v6/static/media/icon_watch_full.ac20c3334e3d5bda882bfa72a8f263aa.svg",
+    "static/media/icon_increase.svg": "/react-coin-tracker-v6/static/media/icon_increase.81907d641bb63c3d39c5a63b9b5d6655.svg",
+    "static/media/icon_decrease.svg": "/react-coin-tracker-v6/static/media/icon_decrease.fcf249db0f21b32a994c3fee0028a566.svg",
+    "static/media/btn_more.svg": "/react-coin-tracker-v6/static/media/btn_more.8597f94b2e1426aae3c97d610462123d.svg",
+    "main.74d5c6e2.js.map": "/react-coin-tracker-v6/static/js/main.74d5c6e2.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.74d5c6e2.js"
+  ]
+}
