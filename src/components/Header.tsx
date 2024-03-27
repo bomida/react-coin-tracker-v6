@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { userInfoApi } from "../apis";
 
 const Header = () => {
-    const dashboardMatch = useMatch('/dashboard');
+    const dashboardMatch = useMatch('/');
     const tradingMatch = useMatch('/trading/:coinId');
     const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
     const [loggedInUser, setLoggedInUser] = useRecoilState(loggedInUserAtom);

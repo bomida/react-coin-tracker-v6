@@ -13,7 +13,7 @@ function Router() {
         <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Header />
             <Routes>
-                <Route path="/dashboard" element={<Coinboard />} />
+                <Route path="/" element={<Coinboard />} />
                 <Route path="/trading/:coinId" element={<TradingBoard />}>
                     {/* <Route path="coins" element={<RightPanelCoins />} />
                     <Route path="detail" element={<RightPanelTrading />} /> */}
