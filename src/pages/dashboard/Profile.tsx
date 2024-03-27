@@ -99,7 +99,7 @@ const Profile = () => {
             if (loggedInUser) {
                 let onwCoinsAmount = loggedInUser?.portfolio.map(coin => coin.amount);
                 let plusAmount = onwCoinsAmount.length === 0 ? 0 : onwCoinsAmount.reduce((prev, curr) => prev + curr);
-                let resultTotalAmount = Number(plusAmount.toFixed(5));
+                let resultTotalAmount = Number(plusAmount.toFixed(2));
                 setTotalCoinsAmount(resultTotalAmount);
             }
         }

@@ -57,10 +57,12 @@ const LeftPanelChart:React.FC = () => {
                                 <PriceLabel>market cap</PriceLabel>
                                 <PriceText>$ {tradeData?.quotes.USD.market_cap.toLocaleString()}<span>USD</span></PriceText>
                             </li>
+                            {/* 더이상 api에서 제공 안해줌 
                             <li>
                                 <PriceLabel>circulating supply</PriceLabel>
-                                <PriceText>$ {tradeData?.circulating_supply.toLocaleString()}<span>USD</span></PriceText>
+                                <PriceText>$ {tradeData?.circulating_supply.toLocaleString()}<span>USD</span></PriceText> 
                             </li>
+                            */}
                             <li>
                                 <PriceLabel>volume</PriceLabel>
                                 <PriceText>$ {tradeData?.quotes.USD.volume_24h.toLocaleString()}<span>USD</span></PriceText>
@@ -163,15 +165,19 @@ const ChartBottWrapper = styled.div`
 
         li {
             position: relative;
-            padding-left: 15rem;
+            padding-right: 20rem;
+            width: 100%;
 
             &::before {
                 content: "";
                 position: absolute;
-                left: 0;
+                right: 20rem;
                 width: 2rem;
                 height: 100%;
                 background-color: ${props => props.theme.colors.three};
+            }
+            &:last-child::before {
+                all: unset;
             }
         }
     }

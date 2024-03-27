@@ -40,6 +40,16 @@ const RightPanelTrade = () => {
     }
 
     const clickExcuteTrade = async () => {
+
+        if (!isLogin) {
+            window.alert('결제를 원하신다면 로그인을 해주세요.');
+            return;
+        }
+
+        if (!window.confirm('결제를 진행하시겠습니까?')) {
+            return;
+        }
+
         let account = 0;
         let defaultPortfolioItem: IPortfolioItem = {
             coinId: undefined,
@@ -114,7 +124,6 @@ const RightPanelTrade = () => {
             amount: defaultPortfolioItem.amount,
             traded_amt: isCoinPrice
         };
-        console.log('tradeResult', tradeResult);
 
         try {
             const userId = loggedInUser?.id; // 현재 사용자 id 가져오기
@@ -139,10 +148,10 @@ const RightPanelTrade = () => {
                 }
             }
 
-            
             await userInfoApi.put(`/users/${userId}`, userData);
+            window.alert('성공적으로 결제가 되었습니다.');
         } catch(error) {
-            // console.log(error);
+            console.log(error);
         }
 
         // 0. input reset
@@ -202,8 +211,10 @@ interface TradeProps {
 }
 
 const TypeQuantity:React.FC<TradeProps> = ({isCoinPrice, isReset}) => {
+    let iCanBuy = 0;
     const [isQuantityValue, setIsQuantity] = useRecoilState(isQuantityAtom);
     const [isRadioChecked, setIsRadioChecked] = useState<number | null>(null);
+    const isLoggedInUser = useRecoilValue(loggedInUserAtom);
     const resultPrice = isCoinPrice * parseFloat(isQuantityValue.replace(/,/g, ''));
     const changeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
         const numericValue = parseFloat(e.target.value.replace(/,/g, ''));
@@ -218,9 +229,11 @@ const TypeQuantity:React.FC<TradeProps> = ({isCoinPrice, isReset}) => {
 
     useEffect(() => {
         if (isQuantityValue === '') setIsRadioChecked(null);
-
         if (isReset) setIsQuantity('');
-    }, [isQuantityValue, isReset]);
+        if (isLoggedInUser?.account) iCanBuy = isLoggedInUser?.account / isCoinPrice;
+    }, [isQuantityValue, isReset, iCanBuy]);
+    // console.log('iCanBuy ->', iCanBuy);
+    // console.log('isCoinPrice ->', isCoinPrice);
 
     const quantitiesArr = [10, 50, 100, 500, 1000];
 
@@ -248,7 +261,7 @@ const TypeQuantity:React.FC<TradeProps> = ({isCoinPrice, isReset}) => {
             </SelectedRadioGroup>
             <TotalPriceWrapper>
                 <span>Total Price</span>
-                <p>$<b>{!resultPrice ? 0 : resultPrice}</b></p>
+                <p>$<b>{!resultPrice ? 0 : resultPrice.toFixed(2).toLocaleString()}</b></p>
             </TotalPriceWrapper>
         </SelectedTypeContainer>
     );
@@ -304,7 +317,7 @@ const TypePrice:React.FC<TradeProps> = ({isCoinPrice, isReset}) => {
             </SelectedRadioGroup>
             <TotalPriceWrapper>
                 <span>Total Quantity</span>
-                <p><b>{!resultQuantity ? 0 : resultQuantity.toFixed(10)}</b></p>
+                <p><b>{!resultQuantity ? 0 : resultQuantity}</b></p>
             </TotalPriceWrapper>
         </SelectedTypeContainer>
     );

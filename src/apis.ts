@@ -26,6 +26,8 @@ export function fetchCoinData(coinId: string) {
 }
 
 export function fetchPriceData(coinId: string) {
+    // console.log('coinId ->', coinId);
+    
     return fetch(`${BASE_URL}/tickers/${coinId}`).then((response) => response.json());
 }
 export interface PriceInfo {
