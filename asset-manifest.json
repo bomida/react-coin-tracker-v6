@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.js": "/react-coin-tracker-v6/static/js/main.6899bacd.js",
+    "main.js": "/react-coin-tracker-v6/static/js/main.355a23d6.js",
     "static/media/logo.svg": "/react-coin-tracker-v6/static/media/logo.55b85dcab2e530f7d4eeebda03767998.svg",
     "index.html": "/react-coin-tracker-v6/index.html",
     "static/media/btn_select_arrow.svg": "/react-coin-tracker-v6/static/media/btn_select_arrow.b7583d7dd468e0324b6dac571dd40672.svg",
@@ -8,9 +8,9 @@
     "static/media/icon_increase.svg": "/react-coin-tracker-v6/static/media/icon_increase.81907d641bb63c3d39c5a63b9b5d6655.svg",
     "static/media/icon_decrease.svg": "/react-coin-tracker-v6/static/media/icon_decrease.fcf249db0f21b32a994c3fee0028a566.svg",
     "static/media/btn_more.svg": "/react-coin-tracker-v6/static/media/btn_more.8597f94b2e1426aae3c97d610462123d.svg",
-    "main.6899bacd.js.map": "/react-coin-tracker-v6/static/js/main.6899bacd.js.map"
+    "main.355a23d6.js.map": "/react-coin-tracker-v6/static/js/main.355a23d6.js.map"
   },
   "entrypoints": [
-    "static/js/main.6899bacd.js"
+    "static/js/main.355a23d6.js"
   ]
 }
