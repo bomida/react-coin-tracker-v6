@@ -10,10 +10,10 @@ function Router() {
     const isLogin = useRecoilValue(isLoginAtom);
 
     return(
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Header />
             <Routes>
-                <Route path="/react-coin-tracker-v6" element={<Coinboard />} />
+                <Route path="/dashboard" element={<Coinboard />} />
                 <Route path="/trading/:coinId" element={<TradingBoard />}>
                     {/* <Route path="coins" element={<RightPanelCoins />} />
                     <Route path="detail" element={<RightPanelTrading />} /> */}
